@@ -1,0 +1,48 @@
+{% extends "master.html" %}
+
+{% block title %} Login {% endblock %}
+
+{% block content %} 
+
+<style>
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .card {
+        width: 18rem;
+    }
+    .card-body {
+        padding: 20px;
+    }
+</style>
+
+<div class="login-container">
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="Username">Email :</label>
+                    <input type="text" id="Username" name="email" class="form-control" placeholder="Enter email"/>
+                </div>
+                <div class="form-group">
+                    <label for="Password">Password :</label>
+                    <input type="password" id="Password" name="Password" class="form-control" placeholder="Enter password"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-3">
+    <h5>Don't have an account?</h5>
+    <a href="{% url 'RegisterView' %}">
+        <button type="button" class="btn btn-warning">Sign up</button>
+    </a>
+</div>
+
+{% endblock %}

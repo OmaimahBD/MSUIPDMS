@@ -1,0 +1,118 @@
+{% extends "master.html" %}
+
+{% block title %} User Profile {% endblock %}
+
+{% block content %}
+
+<style>
+  .card-title {
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      font-size: 30px;
+      text-align: center;
+      color: maroon;
+  }
+
+  .card { 
+      width: 90 %;
+      max-width: 1300px;
+      height: 85%;
+      background-color: #fff;
+      border-radius: 8px;
+      margin: 50px auto;
+      padding: 20px;
+      box-sizing: border-box;
+      font-size: 15px;
+      color: maroon;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .profile-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+  }
+
+  .profile-header img {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid maroon;
+  }
+
+  .profile-header h1 {
+      margin-top: 10px;
+      font-size: 4em;
+      color: maroon;
+  }
+
+  .profile-header h5 {
+      margin: 5px 0;
+      font-size: 1.0em;
+      color: black;
+      font-family: Verdana, sans-serif;
+  }
+  .btn-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px; /* Adds space between buttons */
+}
+
+  .button {
+      display: inline-block;
+      width: auto;
+      padding: 10px 20px;
+      background-color: maroon;
+      color: white;
+      text-align: center;
+      text-decoration: none !important;
+      border-radius: 5px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin: 10px 0;
+  }
+
+  .button:hover {
+      background-color: goldenrod;
+      color: black;
+  }
+</style>
+
+<div class="container-fluid mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">MY PROFILE</h3>
+                </div>
+                <div class="card-body">
+                    {% if request.user.is_authenticated %}
+                        <div class="profile-header">
+                            {% if request.user.profile %}
+                                <img src="{{ request.user.profile.url }}" alt="Profile Picture"/>
+                            {% else %}
+                                <img src="default-profile.png" alt="Default Profile Picture"/>
+                            {% endif %}
+                            <h1>{{ request.user.username }}</h1>
+                            <h5>Firstname: {{ request.user.first_name }}</h5>
+                            <h5>Lastname: {{ request.user.last_name }}</h5>
+                            <h5>Email: {{ request.user.email }}</h5>
+                            <h5>College: {{ request.user.college }}</h5>
+                        </div>
+                        <div class="btn-container">
+                            <a href="{% url 'UpdateUser' %}" class="button">Update Profile</a>
+                            <a href="{% url 'UpdatePassword' %}" class="button">Update Password</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ADMIN/COORDINATOR VIEW</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        :root {
+            --main-bg-color: ;
+            --main-text-color: #009d63;
+            --second-text-color: #bbbec5;
+            --second-bg-color: #c1efde;
+        }
+
+        .primary-text {
+            color: white;
+        }
+
+        .second-text {
+            color: maroon;
+        }
+
+        .primary-bg {
+            background-color: maroon;
+        }
+
+        .secondary-bg {
+            background-color: white;
+        }
+
+        .rounded-full {
+            border-radius: 100%;
+        }
+
+        #wrapper {
+            overflow-x: hidden;
+            background-color: #e7e7e7;
+        }
+
+        #sidebar-wrapper {
+            min-height: 100vh;
+            margin-left: -22rem;
+            transition: margin 0.25s ease-out;
+        }
+
+        #sidebar-wrapper .sidebar-heading {
+            padding: 0.875rem 1.25rem;
+            font-size: 1.5rem;  
+            background-color: darkred;
+        }
+
+        #sidebar-wrapper .list-group {
+            width: 22rem;
+        }
+
+        #page-content-wrapper {
+            min-width: 100vw;
+        }
+
+        #wrapper.toggled #sidebar-wrapper {
+            margin-left: 0;
+        }
+
+        #menu-toggle {
+            cursor: pointer;
+        }
+
+        .list-group-item {
+            border: none;
+            padding: 15px 20px;
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s; /* Smooth transition effect */
+        }
+
+        .list-group-item.active {
+            background-color: transparent;
+            color: var(--main-text-color);
+            font-weight: bold;
+            border: none;
+        }
+
+        .list-group-item:hover {
+            background-color: rgba(0, 0, 0, 0.075); /* Light gray background on hover */
+            box-shadow: 0 0 10px rgba(128, 0, 0, 0.4); /* Maroon box shadow on hover */
+        }
+
+        .profile-options, .dropdown-menu {
+            display: none; /* Hide profile options and dropdown menu by default */
+        }
+
+        .profile-options.show, .dropdown-menu.show {
+            display: block; /* Show options when 'show' class is added */
+        }
+        #dataVisOptions {
+            padding: 10px 0; /* Add some padding for spacing */
+        }
+        
+        #dataVisOptions .dropdown-item {
+            display: block;
+            padding: 5px 10px; /* Add indent using padding */
+            margin-left: 10px; /* Add indent */
+            text-decoration: none; /* Remove underline */
+            color: #333; /* Default text color */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+            border-radius: 4px; /* Rounded corners for items */
+        }
+        
+        #dataVisOptions .dropdown-item:hover {
+            background-color: maroon; /* Maroon hover background */
+            color: white; /* Change text color on hover */
+        }
+        
+
+        @media (min-width: 768px) {
+            #sidebar-wrapper {
+                margin-left: 0;
+            }
+
+            #page-content-wrapper {
+                min-width: 0;
+                width: 100%;
+            }
+
+            #wrapper.toggled #sidebar-wrapper {
+                margin-left: -20rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-white" id="sidebar-wrapper">
+            {% if user.is_superuser %}
+            <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
+                <i class="fas fa-user-secret me-2"></i>ADMIN PANEL
+            </div>
+            {% elif user.is_coordinator %}
+            <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
+                <i class="fas fa-user-secret me-2"></i>COORDINATOR PANEL
+            </div>
+            {% endif %}
+
+            <div class="list-group list-group-flush my-3">
+                <a href="{% url 'AdminHome' %}" class="list-group-item list-group-item-action bg-transparent second-text active" style="color: maroon;">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+
+                <!-- Data Visualization Section -->
+                <div class="profile-section">
+                    <button class="list-group-item list-group-item-action bg-transparent second-text fw-bold" type="button" id="dataVisButton">
+                        <i class="fa fa-database"></i> Data Visualization ⮟
+                    </button>
+                    <div class="profile-options" id="dataVisOptions">
+                        <a class="dropdown-item" href="{% url 'NumIPCollege' %}">• Number of IP's per College</a>
+                        <a class="dropdown-item" href="{% url 'NumIPCollege1' %}">• Total of IP</a>
+                        <a class="dropdown-item" href="{% url 'NumIp' %}">• Number of Intellectual Property</a>
+                        <a class="dropdown-item" href="{% url 'mostviewedip' %}">• Top 10 Most Viewed IP</a>
+                    </div>
+                </div>
+
+                <a href="{% url 'AdminStudList' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <i class="fa fa-users fa-fw"></i> Manage User
+                </a>
+
+                {% if user.is_superuser %}
+                <a href="{% url 'AdminList' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <i class="fa fa-eye fa-fw"></i> Manage Coordinator
+                </a>
+                {% endif %}
+                <a href="{% url 'AdminIPList' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <i class="fa fa-users fa-fw"></i> List of Intellectual Property
+                </a>
+                <a href="{% url 'AdminManageStudReq' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <i class="fa fa-bullseye fa-fw"></i> Manage User Request
+                </a>
+                <a href="{% url 'AdminManageStudUpload' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <i class="fa fa-cloud me-2"></i> Manage User Upload
+                </a>
+                <a href="{% url 'AdminAddIntellectualProperty' request.user.id %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <i class="fa fa-bell fa-fw"></i> Upload Intellectual Property
+                </a>
+                <a href="{% url 'Adminprofile' request.user.id %}"
+                class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                <i class="fa fa-users fa-fw"></i> My Profile
+            </a>
+
+                <a href="{% url 'LogoutView' %}" class="list-group-item list-group-item-action bg-transparent text-danger fw-bold">
+                    <i class="fas fa-power-off me-2"></i>Logout
+                </a>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <div id="page-content-wrapper">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <script>
+        // Toggle data visualization options
+        document.getElementById('dataVisButton').addEventListener('click', function() {
+            var options = document.getElementById('dataVisOptions');
+            options.classList.toggle('show');
+        });
+
+        // Sidebar toggle functionality
+        var el = document.getElementById("wrapper");
+        var toggleButton = document.getElementById("menu-toggle");
+
+        if (toggleButton) {
+            toggleButton.onclick = function () {
+                el.classList.toggle("toggled");
+            };
+        }
+    </script>
+</body>
+</html>

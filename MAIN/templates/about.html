@@ -1,0 +1,390 @@
+{% extends 'master.html' %}
+
+{% block title %}
+    MIPO: About
+{% endblock %}
+
+{% block content %}
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<img src="../static/admin/img/1.png" alt="About Image" class="about-image">
+<style>
+    .org-list {
+        padding: 30px;
+        background-color: rgb(114, 44, 44);
+        border: 1px solid #580000;
+        border-radius: 8px;
+        margin: 10px auto; /* Center horizontally */
+        width: 400px; /* Set a fixed width */
+        height: 800px; /* Set a fixed height */
+        display: flex; /* Use flexbox for vertical alignment */
+        flex-direction: column; /* Stack items vertically */
+        align-items: center; /* Center items horizontally */
+        margin-left: 2rem;
+        margin-right: 12rem; /* Adjusted right margin */
+    }
+    .org-item {
+        margin-bottom: 30px;
+    }
+    .name {
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.2em;
+        color: #ffffff;
+    }
+    .position {
+        font-style: italic;
+        text-align: center;
+        color: #ffea00;
+        margin-left: 10px;
+    }
+    .logos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px; /* Add spacing between logos */
+        justify-content: center;
+    }
+
+    .logos img. logoovcred {
+        margin: 10px;
+    }
+    .logos img. logoitso {
+        margin: 10px;
+    }
+    .logos img. logomsu {
+        margin: 10px;
+    }
+    .logos img. logotic {
+        margin: 10px;
+    }
+
+    .logoovcred {
+        width: 275px;
+        height: auto;
+        margin-left: 20px;
+        margin-top: 14px;
+    }
+    .logotic {
+        width: 275px;
+        height: auto;
+        margin-top: -16px;
+        margin-right: 30px;
+    }
+    .logomsu {
+        width: 160px; 
+        height: auto;
+        margin-top: 23px;
+    }
+    .logoitso {
+        width: 145px;
+        height: 185px;
+        margin-top: 20px;
+    }
+    /* About page specific styles */
+    .about-image {
+        width: 100%;
+        height: 400px;
+        object-fit: fill; 
+        position: relative ; 
+        background-position: center;
+        display: flexbox;
+    
+    }
+
+    .about-page {
+        color: #333;
+        margin-top: 30px;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .content {
+        flex: 2;
+        display: grid;
+        grid-template-columns: 1fr; 
+        gap: 15px; 
+        margin-left: 12rem;
+        margin-right: 1rem; /* Adjusted right margin */
+    }
+
+    h1 {
+        position: relative; /* Needed for the pseudo-element */
+        text-align: left;
+        color: #800000;
+        margin-bottom: 20px;
+        font-weight: bolder; /* Ensure bold font-weight is applied */
+        font-family: "Century Gothic", sans-serif;
+    }
+
+    h1::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -5px; /* Adjust the position of the underline */
+        width: 0;
+        height: 4px; /* Adjust the thickness of the underline */
+        background-color: goldenrod;
+        transition: width 0.5s ease-in-out;
+        width: 100%;
+    }
+
+    p {
+        line-height: 1.7;
+        margin-bottom: 10px;
+        text-align: justify;
+        font-family: "Arial", sans-serif;
+    }
+
+    .contact-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-left: px;
+    }
+
+
+    .contact-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-left: px;
+    }
+
+    .contact-info div {
+        flex: 1;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Century Gothic", sans-serif; /* Use font-family instead of font-style */
+    }
+
+    .contact-info i {
+        font-size: 30px;
+        color: maroon;
+        margin-bottom: 15px;
+        margin-right: 10px;
+    }
+
+    /* Media Queries for Mobile Devices */
+    @media (max-width: 1200px) {
+        .about-page {
+            flex-direction: column;
+            align-items: center;
+        }
+        .content {
+            margin: 0;
+            width: 100%;
+            padding: 10px;
+        }
+        .logos {
+            flex-direction: column;
+            align-items: center;
+        }
+        .logos img {
+            flex: 1 1 50%;
+            margin: 10px 0; 
+            width: 150px;
+            height: auto;
+          
+        }
+    }
+
+    @media (max-width: 1060px) {
+        .about-page {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .content {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .org-list {
+            width: 100%; /* Adjust width for mobile */
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .contact-info {
+            flex-direction: column;
+        }
+
+        .contact-info div {
+            flex: 1 1 50%;
+            margin-bottom: 10px;
+        }
+
+        .logos {
+            flex-direction: column;
+            align-items: center;
+        }
+        .logos img {
+            flex: 1 1 50%;
+            margin: 10px 0; 
+            width: 150px;
+            height: auto;
+          
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 991px) {
+        .about-page {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .content {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .org-list {
+            width: 100%; /* Adjust width for mobile */
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .contact-info {
+            flex-direction: column;
+        }
+
+        .contact-info div {
+            flex: 1 1 50%;
+            margin-bottom: 10px;
+        }
+
+        .logos {
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .logos img {
+            width: 100px; /* Adjust size as needed */
+            height: auto;
+            margin-bottom: 10px; /* Add spacing between logos */
+        }
+
+    }
+
+    @media (min-width: 576px) and (max-width: 767px) {
+        .logos {
+            flex-direction: column;
+            align-items: center;
+        }
+        .logos img {
+            width: 100px; /* Adjust size as needed */
+            height: auto;
+            margin-bottom: 10px; /* Add spacing between logos */
+        }
+    }
+    
+
+    @media (max-width: 575px) {
+        .logos {
+            flex-direction: column;
+            align-items: center;
+        }
+        .logos img {
+            width: 100px; /* Adjust size as needed */
+            height: auto;
+            margin-bottom: 10px; /* Add spacing between logos */
+        }
+    }
+
+</style>
+
+<div class="about-page">
+    <div class="content">
+        <h1>The Office</h1>
+        <p>The creation of MSU Intellectual Property Office (MIPO) is one of the rights and responsibilities of all Research and Development Institutes/Institutions (RDIs) to establish and strengthen their IP Management and Technology Licensing Offices given by the rules and regulations implementing Republic act 10055 (IRR of RA 10055, Rules 10, 24 and 25) issued jointly by DOST and IPOPHIL as the national government agencies mandated to promulgate such IRR. It is also MSU Marawi OVCRED's response to CHED directive for SUCs and HEIs to establish their own IP Policy and the systemwide approval of MSU-lIT IP Policy and from which the BOR approved creation of MSU-IIT IPU was based. The MIPO will function to protect and manage all IPs and IPRs of the university main campus and make them available to the public and private sector for the benefit of the community and the country.</p>
+
+        <h1>Mission</h1>
+        <p>MSU Intellectual Property Office (MIPO) is committed to promote intellectual property awareness, safeguard all IPs and IPRS by filing for protection and facilitate IP activities which include generation, preservation, and transmission of knowledge, utilization and commercialization, and techno-transfer of IPs.</p>
+
+        <h1>Vision</h1>
+        <p>A leading technological hub in BARMM dedicated to serving the University and constituents and the local IP developers for the protection of all Intellectual Property rights and foster technology transfer of IPs to public and private sectors.</p>
+
+        <h1>Objectives</h1>
+        <p>● Promote and facilitate the IP program development of the institution;</p>
+        <p>● Integrate IP programs and policies in all scholarly endeavors of the institution;</p>
+        <p>● Conduct IP mapping and assessment in MSU and its service areas;</p>
+        <p>● Identify possible IPs for possible technology transfer and commercialization; and</p>
+        <p>● Manage IP in MSU and its service area</p> 
+
+        <h1>Goals</h1>
+        <p>MIPO aims to establish dynamic involvement of all University constituents and the public in various IP programs initiated by the Office.</p>
+    </div>
+    <div class="">
+        <div class="org-list">
+            <div class="org-item">
+                <p class="name" style="text-align: center;">TECHNOLOGY INNOVATION CENTER</p>
+            </div>
+            <div class="org-item">
+                <p class="name">SARIFA SOFIA A. MACARAMBON-ALI, JD</p>
+                <p class="position">DIRECTOR</p>
+            </div>
+            <div class="org-item">
+                <p class="name">JOHAIRAH M. GUMAMPONG, CGM</p>
+                <p class="position">EXECUTIVE SECRETARY AND ADMINISTRATIVE AND TECHNICAL STAFF DIVISION</p>
+            </div>
+            <div class="org-item">
+                <p class="name">PROF. CHARLOU A. BAUTISTA, MBA, CFMP</p>
+                <p class="position">CHIEF/MANAGER OF MSU INTELLECTUAL PROPERTY OFFICE INNOVATION AND TECHNOLOGY SUPPORT OFFICE</p>
+            </div>
+            <div class="org-item">
+                <p class="name">PROF. MARIA STELLA G. CODAS, DBA</p>
+                <p class="position">CHIEF OF ENTREPRENEURSHIP TRAINING AND PROMOTION OFFICE</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr style="border: 5px solid maroon; border-top: 3px solid #DAA520; margin: 15px auto; width: 80%;">
+
+<div class="container">
+    <div class="contact-info row">
+        <div class="col-md-4">
+            <i class="fab fa-facebook"></i>
+            <p><a href="https://www.facebook.com/MIPOMarawiCity" target="_blank" style="color:black">MIPO</a></p>
+        </div>
+        <div class="col-md-4">
+            <i class="fas fa-phone"></i>
+            <p>0916-755-7347</p>
+        </div>
+        <div class="col-md-4">
+            <i class="fas fa-envelope"></i>
+            <p><a href="mailto:mipo@gmail.com" target="_blank" style="color:black">mipo@gmail.com</a></p>
+        </div>
+        
+        <div class="col-md-4">
+            <i class="fas fa-map-marker-alt"></i>
+            <p>2nd Street, MSU Campus,<br>Marawi City, Philippines.</p>
+        </div>
+    </div>
+</div>
+
+<div class="logos">
+    <a href="https://www.msumain.edu.ph/" target="_blank">
+        <img src="../static/admin/img/msu-logo.png" alt="MSU Logo" class="logomsu">
+    </a>
+    <a href="https://ovcred.msumain.edu.ph/about/#ovcred" target="_blank">
+        <img src="../static/admin/img/OVCRED.png" alt="OVCRED Logo" class="logoovcred">
+    </a>
+    <img src="../static/admin/img/TIC.png" alt="TIC Logo" class="logotic">
+    <img src="../static/admin/img/ITSO.jpg" alt="TIC Logo" class="logoitso">
+</div>
+
+<footer>
+    <div class="footer_main">
+        <center>
+            <p>Copyright © 2024 IPDMS®. All rights reserved.</p>
+        </center>
+    </div>
+</footer>
+
+{% endblock %}

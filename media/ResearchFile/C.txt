@@ -1,0 +1,2 @@
+With .NET, C# developers can also rely on the powerfull .NET Core framework designed for building web services and applications. The framework comes with a set of customizable components, unified class libraries, and other features that significantly speed up the development process.
+Web services and apps. With the help of .NET Core, it is also possible to develop reliable web services using the same resources of the .NET platform.

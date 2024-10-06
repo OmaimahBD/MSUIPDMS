@@ -1,0 +1,420 @@
+{% extends "AdminCoor/admincoormaster.html" %}
+{% block title %} Intellectual Property {% endblock %}
+
+{% block content %}
+
+<style>
+  .thead {
+    background-color: maroon;
+    color: white; /* Text color */
+    opacity: 0.7;
+    font-size: 13px;
+}
+
+  .roomcontent {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    align-items: start;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 5px 5px 5px 5px rgba(128, 0, 0, 0.3);   
+    padding: 20px 40px;
+    margin-bottom: 20px;
+    margin-top: 10  px;
+  }
+
+  .cover-image {
+    width: 200px;
+    height: 250px;
+    object-fit: cover; 
+    margin-left: 10rem;
+  }
+
+  .roomcontent h1 {
+    color: maroon;
+    font-weight: bold;
+    font-size: 30px;
+    margin-bottom: 10px;
+    margin-left: 4rem;
+  }
+
+  .roomcontent p {
+    font-size: 16px;
+    color: black;
+    margin-bottom: 10px;
+    text-align: justify;
+    margin-left: 4rem;
+  }
+
+  .roomcontent small {
+    font-size: 13px;
+    color: #777;
+    font-style: italic;
+    margin-left: 4rem;
+  }
+
+  .roomcontent span {
+    color: black;
+    font-style: italic;
+    font-size: 15px;
+    display: block;
+    margin-bottom: 10px;
+    margin-left: 10rem;
+  }
+  
+  .roomcontent span1 {
+    color: black;
+    font-style: italic;
+    font-size: 15px;
+    display: block;
+    margin-bottom: 13px;
+    margin-left: 4rem;
+    
+  }
+
+  .btn-outline-success {
+    color: maroon;
+    border: 2px solid maroon;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+    display: inline-block;
+    margin-top: 20px;
+    margin-left: 4rem;
+  }
+
+  .btn-outline-success:hover {
+    background-color: maroon;
+    color: white;
+  }
+
+  .comment-wrapper-container {
+    width: 100%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+
+  .comment-wrapper {
+    max-height: 600px;  /* Increased height for more content visibility */
+    overflow-y: auto;
+    padding-right: 10px; 
+    margin-top: 0;
+  }
+
+  .comment-wrapper h4 {
+    color: maroon;
+    font-size: 30px;
+    margin-bottom: 15px;
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 1;
+    margin-top: 0;
+    font-weight: bold;
+
+  }
+
+  .comment {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+
+  .comment img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+
+  .comment-content {
+    flex: 1;
+    background-color: #f1f1f1;
+    padding: 10px 15px;
+    border-radius: 8px;
+    position: relative;
+  }
+
+  .comment-content small {
+    font-size: 12px;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .comment-content p {
+    font-size: 14px;
+    color: black;
+    margin-top: 5px;
+    text-align: justify;
+  }
+
+  .comment-content .comment-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+
+  .comment-actions a {
+    font-size: 13px;
+    color: maroon;
+    cursor: pointer;
+    transition: color 0.3s;
+    font-size: bold;
+  }
+
+  .comment-actions a:hover {
+    color: goldenrod;
+  }
+
+  .reply {
+    margin-left: 65px;
+    margin-top: 10px;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .reply img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .reply .comment-content {
+    background-color: #e9ecef;
+  }
+
+  .comment-form {
+    width: 100%; /* Ensure form spans the full width of its container */
+    max-width: 900px; /* Set a maximum width for better control */
+    margin: 20px auto; /* Center the form horizontally and add margin */
+    
+    padding: 10px; /* Add padding for spacing */
+    border-radius: 8px; /* Round the corners */
+    
+
+}
+
+.comment-form input[type="text"] {
+    width: 100; /* Adjust width to fit within container, with space for the button */
+    padding: 10px; /* Add padding inside the input field */
+    font-size: 16px; /* Ensure font size is consistent */
+    border: 3px solid maroon; /* Add border for better visibility */
+    border-radius: 4px; /* Round the corners of the input field */
+    margin-left: 3rem;
+}
+
+  /* Modal styles */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+    border-radius: 8px;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .modal-content button {
+    background-color: maroon;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .modal-content button:hover {
+    background-color: #8b0000;
+  }
+
+  .reply-form {
+    display: none; /* Hide reply form by default */
+    margin-top: 10px;
+    margin-left: 150px;
+  }
+  .comment-content, .reply .comment-content {
+    max-width: 90%; /* Ensure content width is responsive */
+    height: 100%;
+  }
+  
+  .comment-form, .reply-form {
+    width: 80%; /* Set the width of forms to full width of the container */
+    height: 100%;
+  }
+  
+  .comment-form input[type="text"], .reply-form input[type="text"] {
+    width: calc(100% - 100px); /* Adjust to fit within container, with space for the button */
+  }
+  #wrapper.toggled #sidebar-wrapper {
+    width: 300px; /* Adjust the width as needed */
+}
+#page-content-wrapper {
+    flex: 1;
+    width: 100%;
+    overflow-x: hidden;
+}
+</style>
+<div id="page-content-wrapper">
+  <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+      <div class="d-flex align-items-center">
+          <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle" style="color:maroon;"></i>
+          <h2 class="fs-2 m-0" style="font-family: Arial, sans-serif; font-size: 5px; font-weight: bold; color: maroon;">Forums</h2>
+      </div>
+  </nav>
+  
+<div class="container">
+  <div class="roomcontent">
+    <div>
+      <span>@{{ IP.host }} </span>
+      <img src="{{ IP.cover.url }}" class="cover-image" alt="IP Cover" />
+    </div>
+    <div>
+      <span1>{{ IP.created|timesince }} ago</span1>
+      <h1>{{ IP.tittle }}</h1>
+      <p>{{ IP.description }}</p>
+      
+      <small>Author: {{ IP.author }}</small><br>
+      <small>Intellectual Property Type: {{ IP.type.type }}</small><br>
+      <small>Year Published: {{ IP.year }}</small><br>
+      <a href="{{ IP.file.url }}" download class="btn btn-outline-success">Download Abstract</a><br>
+    </div>
+  </div>
+
+  <small>{{ IP.topic.name }}</small>
+
+  <hr>
+
+  {% if request.user.is_superuser %}
+  <div class="comment-wrapper-container">
+    <div class="comment-wrapper">
+      <h4>CONVERSATION</h4>    
+
+      {% for comment in comments %}
+<div class="comment">
+  <img src="{{ comment.user.profile.url }}" alt="User Avatar">
+  <div class="comment-content">
+    <small>
+      @{{ comment.user.username }} • {{ comment.created|timesince }} ago
+      {% if comment.user == request.user %}
+      <a href="#" onclick="openModal('deleteCommentModal{{ comment.id }}')" class="delete-link">Delete</a>
+      {% endif %}
+    </small>
+    <p>{{ comment.content }}</p>
+    <div class="comment-actions">
+      
+    </div>
+
+    <!-- Replies Section -->
+    <div class="replies">
+      {% for reply in comment.commenreply_set.all %}
+      <div class="reply">
+        <img src="{{ reply.user.profile.url }}" alt="User Avatar">
+        <div class="comment-content">
+          <small>
+            @{{ reply.user.username }} • {{ reply.created|timesince }} ago
+            {% if reply.user == request.user %}
+            <a href="#" onclick="openModal('deleteReplyModal{{ reply.id }}')" class="delete-link">Delete</a>
+            {% endif %}
+          </small>
+          <p>{{ reply.content }}</p>
+        </div>
+      </div>
+      {% empty %}
+      <p></p>
+      {% endfor %}
+    </div>
+
+    <!-- Reply Form -->
+    <div id="reply-form-{{ comment.id }}" class="reply-form">
+     
+    </div>
+  </div>
+</div>
+{% empty %}
+<p>No comments yet.</p>
+{% endfor %}
+
+    </div>
+  </div>
+
+  <div class="comment-form">
+   
+  </div>
+  {% endif %}
+</div>
+
+
+<script>
+  // Function to store the scroll position
+  function storeScrollPosition() {
+    localStorage.setItem('scrollPosition', window.scrollY);
+  }
+
+  // Function to restore the scroll position
+  function restoreScrollPosition() {
+    const scrollPosition = localStorage.getItem('scrollPosition');
+    if (scrollPosition) {
+      window.scrollTo(0, scrollPosition);
+      localStorage.removeItem('scrollPosition'); // Remove it after using
+    }
+  }
+
+  // Call restoreScrollPosition when the page loads
+  document.addEventListener('DOMContentLoaded', restoreScrollPosition);
+
+  // Add event listener to comment and reply forms
+  document.querySelectorAll('.comment-form form, .reply form').forEach(form => {
+    form.addEventListener('submit', storeScrollPosition);
+  });
+
+</script>
+<script>
+  var el = document.getElementById("wrapper");
+  var toggleButton = document.getElementById("menu-toggle");
+
+  toggleButton.onclick = function () {
+      el.classList.toggle("toggled");
+  };
+</script>
+
+{% endblock %}

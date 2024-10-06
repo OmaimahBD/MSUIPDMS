@@ -1,0 +1,185 @@
+{% extends "AdminCoor/admincoormaster.html" %}
+
+{% block title %} Register {% endblock %}
+
+{% block content %}
+<style>
+    .thead {
+        background-color: maroon;
+        color: white; /* Text color */
+        opacity: 0.7;
+        font-size: 13px;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 300px; /* Adjust the width as needed */
+    }
+
+    #page-content-wrapper {
+        flex: 1;
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .chart-container {
+        width: 100%; /* Full width of the container */
+        height: auto; /* Adjusts height proportionally */
+        max-width: 1200px; /* Optional max-width */
+        margin: 0 auto; /* Centers the container */
+        position: relative;
+    }
+
+    canvas#myPieChart {
+        width: 100% !important; /* Forces the canvas to fill the container */
+        height: 600px !important; /* Keeps the height proportional */
+    }
+
+    /* Style for the Download Button */
+    .download-button {
+        background-color: maroon;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        position: absolute;
+        top: 10px; /* Adjust as needed */
+        right: 10px; /* Adjust as needed */
+        transition: background-color 0.3s ease;
+    }
+
+    .download-button:hover {
+        background-color: darkred;
+    }
+</style>
+
+
+<div id="page-content-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle" style="color:maroon;"></i>
+            <h2 class="fs-2 m-0" style="font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; color: maroon;">
+                Total IP's
+            </h2>
+        </div>
+    </nav>
+    <div class="container-fluid mt-0">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mt-0">
+                    <div class="chart-container">
+                        <button id="downloadReport" class="download-button">Download Report</button>
+                        <canvas id="myPieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const labels = {{ labels|safe }};
+        const values = {{ values|safe }};
+
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'IP Types',
+                data: values,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(199, 199, 199, 0.2)',
+                    'rgba(83, 102, 255, 0.2)',
+                    'rgba(104, 132, 245, 0.2)',
+                    'rgba(255, 99, 71, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(199, 199, 199, 1)',
+                    'rgba(83, 102, 255, 1)',
+                    'rgba(104, 132, 245, 1)',
+                    'rgba(255, 99, 71, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const config = {
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Total Patents, Trademarks, and Copyrights'
+                    },
+                    datalabels: {
+                        formatter: (value, context) => {
+                            let sum = 0;
+                            let dataArr = context.chart.data.datasets[0].data;
+                            dataArr.map(data => {
+                                sum += data;
+                            });
+                            let percentage = (value * 100 / sum).toFixed(2) + "%";
+                            return percentage;
+                        },
+                        color: '#000', // Change the text color to black
+                    }
+                },
+                animation: {
+                    animateRotate: true,
+                    animateScale: true,
+                }
+            },
+            plugins: [ChartDataLabels],
+        };
+
+        const ctx = document.getElementById('myPieChart').getContext('2d');
+        const myPieChart = new Chart(ctx, config);
+
+        document.getElementById('downloadReport').addEventListener('click', function() {
+            html2canvas(document.querySelector('.chart-container'), {
+                scale: 2 // Increase scale for better quality
+            }).then(function(canvas) {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('landscape', 'mm', 'a4'); // Landscape A4 size
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const imgWidth = pdfWidth;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+
+                let position = 0;
+                // Adjust position and scaling to fit multiple pages if needed
+                while (position < imgHeight) {
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, pdfHeight);
+                    position += pdfHeight;
+                    if (position < imgHeight) pdf.addPage();
+                }
+                pdf.save('chart.pdf');
+            }).catch(function(error) {
+                console.error('Error creating canvas:', error);
+            });
+        });
+    });
+</script>
+{% endblock %}

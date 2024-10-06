@@ -1,0 +1,101 @@
+{% extends 'AdminCoor/admincoornav.html' %}
+
+{% block title %} Collge Page{% endblock %}
+
+{% block content %} 
+<style>
+    .room-container {
+      display: grid;
+      grid-template-columns: 1fr 4fr; /* Filters on the left, content on the right */
+      gap: 20px; /* Space between columns */
+    }
+  
+    .roomcontent {
+      display: grid;
+      grid-template-columns: 1fr 4fr;
+      text-align: justify;
+      margin-bottom: 20px; /* Space between room content blocks */
+    }
+  
+    .filter-section {
+      padding: 1em; /* Padding for the filter section */
+      background-color: #f9f9f9; /* Light background */
+      border: 1px solid #ddd; /* Optional border */
+      border-radius: 5px; /* Rounded corners */
+    }
+  
+    h3, h5 {
+      margin: 10px 0; /* Margin for headings */
+    }
+      
+     
+  </style>
+  
+    <div class="room-container">
+        
+       
+      <div>
+          <a href="{% url 'room' %}">Back</a>
+          {% for ip in IP %}
+              {% if request.user == ip.host %}
+              <a href="{% url 'UpdateIntellectualProperty' ip.id %}">Edit</a>
+              <a href="{% url 'DeleteIntellectualProperty' ip.id %}">Delete</a>
+              {% endif%}
+            
+              
+              <div class="roomcontent">
+                
+              <div>
+                <span>@{{ip.host.username}}   </span>
+                <a href="/IntellectualProperty/{{ip.id}}" ><img src="{{ip.cover.url}}" /></a>
+              </div>
+              <div>
+                <span>{{ip.created|timesince}} ago</span>
+                <h1>{{ip.tittle}} </h1>
+                <p>{{ip.description}}</p>
+              </div>
+            
+              </div>
+              
+            
+              <small>{{ip.type.type}}</small>
+              <hr>
+  
+          {% endfor %}
+         
+        </div>
+  
+        <div>
+          <div>
+          <span>{{IP_count}} results</span><br>
+          <div><h3>Filter</h3><hr></div>
+         <a href=" {% url 'CollegePage' %}"> <h5>By Colleges</h5></a>
+          <hr>
+          <div><a href=" {% url 'room' %}"><h4>All</h4></a></div>
+          {% for topic in topics %}
+            
+          <div><a href=" {% url 'room' %}?q={{topic.name}}"><h4>{{topic.name}}</h4></a></div>
+            
+          {% endfor%}
+          <a class="btn btn--link" href=" {% url 'CollegePage' %}"><h4>More...</h4></a>
+          </div>
+          
+          <div>
+            <hr>
+            <h5>Intellectual Property</h5>
+            <hr>
+            
+            {% for type in types %}
+            
+            <div><a href=" {% url 'room' %}?q={{type.type}}"><h4>{{type.type}}</h4></a></div>
+            
+              
+            {% endfor%}
+          </div>
+        </div>
+  
+    </div>
+  
+  
+  
+{% endblock%}

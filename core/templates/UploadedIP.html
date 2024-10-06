@@ -1,0 +1,133 @@
+{% extends "master.html" %}
+
+{% block title %}Upload{% endblock %}
+
+{% block content %}
+<style>
+    .thead {
+        background-color: rgba(128, 0, 0, 0.7); /* Transparent maroon color */
+        color: white; /* Text color */
+    }
+    .card-title {
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        font-size: 30px;
+    }
+    .card {
+        width: 90%;
+        max-width: 1500px;
+        background-color: #fff;
+        border-radius: 8px;
+        margin: 50px auto;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    .status-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%; /* Make the status box occupy the full height of the cell */
+        color: #fff; /* Default text color */
+        font-weight: bold;
+        padding: 10px;
+        border-radius: 5px;
+        text-transform: uppercase; /* Make text uppercase */
+        
+    }
+    .status-approved {
+        background-color: rgba(0, 128, 0, 0.7); /* Darker green for better contrast */
+        color: #fff; /* White text for readability */
+        opacity: 0.7;
+    }
+    .status-pending {
+        background-color: rgba(255, 255, 0, 0.7); /* Darker yellow for better contrast */
+        color: #000; /* Black text for readability */
+        opacity: 0.7;
+    }
+    .status-rejected {
+        background-color: rgba(255, 0, 0, 0.7); /* Darker red for better contrast */
+        color: #fff; /* White text for readability */
+        opacity: 0.7;
+        
+    }
+</style>
+
+<center>
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mt-5">
+                    <div class="card-header">
+                        <h3 class="card-title">MY UPLOAD/s</h3>
+                        <div class="card-tools">
+                            <!-- Optional: Add a button for additional functionality -->
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <center>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="example2" class="table table-bordered table-hover">
+                                <thead class="thead">
+                                    <tr>
+                                        <th>Cover</th>
+                                        <th>Title</th>
+                                        <th>College</th>
+                                        <th>Main Author</th>
+                                        <th>Co-Authors</th>
+                                        <th>View Full Copy</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ip in IP %}
+                                            <tr>
+                                                <td>
+                                                    {% if ip.cover %}
+                                                        <img src="{{ ip.cover.url }}" class="cover-image" alt="Cover Image" style="width: 40px; height: auto;" />
+                                                    {% else %}
+                                                        NA
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ ip.tittle }}</td>
+                                                <td>{{ ip.college }}</td>
+                                                <td>{{ ip.mainauthor.last_name }}, {{ ip.mainauthor.first_name }} </td>
+                                                <td> 
+                                                    {% for author in ip.author.all %}
+                                                        {{ author.last_name }}, {{ author.first_name }}{% if not forloop.last %}, {% endif %}
+                                                    {% empty %}
+                                                        NA
+                                                    {% endfor %}
+                                                </td>
+                                                <td>
+                                                    {% if ip.file %}
+                                                        <a href="{{ ip.file.url }}" target="_blank">View File</a>
+                                                    {% else %}
+                                                        NA
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if ip.is_pending %}
+                                                        <div class="status-box status-pending">Pending</div>
+                                                        <a  href="{% url 'DeleteIntellectualProperty' ip.id %}" class="btn btn-success">cancel</a>
+                                                    {% elif ip.is_approved %}
+                                                        <div class="status-box status-approved">Approved {{ ip.approvedDate }}</div>
+                                                    {% else %}
+                                                        <div class="status-box status-rejected">Rejected {{ ip.disapprovedDate }}</div>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                    
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    </center>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+{% endblock %}

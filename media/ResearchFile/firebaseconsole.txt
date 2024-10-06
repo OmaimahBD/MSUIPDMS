@@ -1,0 +1,96 @@
+-to start with this firebase  database, we can directly go with console.firebase.google.com
+first we'll open browser and type console,firebase.google.com
+then we will add our new project, i'll name it library sys. just click next, next 
+and now select an account. so pwede tayong mag select ng existing account or
+create new account.
+then after creating our project we can either build firestore or real-time
+databse
+
+
+-by default we can't read and write in our db  so all we have to do is to edit 
+rules and set our read and write key to true.then click on publish.now that the 
+rules is changed we can 
+
+-so we have to remember that in firebase we are not using scheama, we are not 
+storing data in a form of table. instead we store data in a form of json 
+format where we can have nodes and series of key. the parent key and the
+child key where the child key is the primary key in the parent key.
+so para mas maintidihan natin lets's do this in our 
+
+
+by this way we can add the data into our database, here we
+have ids for particula object so and equavalent nito sa sql is primary key and
+below our object or childkey we have key value pair or in sql pa we call this
+attributes.
+
+
+insert data- we use the firebase SDK, we first grab the  database object
+then we create a reference to where wenna save the data. in this case where
+creating a ref to the users location. and we will specify if anong
+primary key or child key natin i sasave yung data.
+
+const db = firebase.database();
+const customers = db.ref().child("users");
+const primaryKey = "user_one";
+
+customers.child(primaryKey).set({
+"firstname" : "maimah",
+"lastname" : "dangco",
+"location" : "PLH"
+
+});
+
+
+-so how do we provide relation on our collection?
+
+
+{ 
+   "users" : 
+   {
+      "user_one":
+	{
+         "firstname" : "omaimah",
+         "lastname" : "dangco",
+         "location" : "PLH"
+
+
+	},
+	"user_two":
+	{
+          "firstname" : "lanz",
+         "lastname" : "lozaldo",
+         "location" : "3rd street"
+
+	}
+   }, 
+   "events" :
+   {
+     "event_one" :
+      {
+       "name" : "CICS Gala",
+       "date" : 20230866
+      },
+      "event_two" :
+      {
+        "name" : "Foundation Day",
+       "date" : 20230866
+      }
+ 
+   },
+  
+ "eventAtendees" :
+   {
+     "event_one" :
+      {
+       "user_one" : "omaimah",
+       "user_two" :  "lanz"
+      }
+       
+   }
+  
+
+}
+
+atendees is key that relates users to event keys, what creates this relation is called foreign key.
+
+

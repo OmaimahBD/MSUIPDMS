@@ -1,0 +1,525 @@
+
+{% extends "master.html" %}
+{% block title %} Intellectual Property {% endblock %}
+
+{% block content %}
+<style>
+  /* Global Styles */
+  body, html {
+      height: 100%;
+      background-color: #f8f9fa;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+  }
+  
+  .container {
+    padding: 0 150px;
+    box-sizing: border-box;
+  }
+
+  .roomcontent {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    align-items: start;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 5px 5px 5px 5px rgba(128, 0, 0, 0.3); 
+    padding: 30px;
+    margin-top: 80px;
+  }
+
+  .cover-image {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    object-fit: cover; 
+    margin: 0 auto;
+    margin-left: 6rem;
+  }
+
+  .roomcontent h1 {
+    color: maroon;
+    font-weight: bold;
+    font-size: 24px;
+    margin: 10px 0;
+    margin-left: 10rem;
+    margin-top: 2rem;
+  }
+
+  .roomcontent p {
+    font-size: 16px;
+    color: black;
+    margin: 10px 0;
+    text-align: justify;
+    margin-left: 10rem;
+  }
+
+  .roomcontent small {
+    font-size: 13px;
+    color: #777;
+    font-style: italic;
+    margin-left: 10rem;
+  }
+
+  .roomcontent span {
+    color: black;
+    font-style: italic;
+    font-size: 15px;
+    display: block;
+    margin-bottom: 10px;
+    margin-left: 10rem;
+    margin-top: 2rem;
+  }
+  .roomcontent span1 {
+    color: black;
+    font-style: italic;
+    font-size: 15px;
+    display: block;
+    margin-bottom: 10px;
+    margin-left: 10rem;
+    margin-top: 3.5rem;
+  }
+
+  .btn-outline-danger {
+    color: maroon;
+    border: 2px solid maroon;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+    display: inline-block;
+    margin-top: 20px;
+    margin-left: 10rem;
+  }
+
+  .btn-outline-danger:hover {
+    background-color: maroon;
+    color: white;
+  }
+
+  .comment-wrapper-container {
+    width: 100%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+
+  .comment-wrapper {
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 10px; 
+  }
+
+  .comment-wrapper h4 {
+    color: maroon;
+    font-size: 24px;
+    margin-bottom: 15px;
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 1;
+    font-weight: bold;
+  }
+
+  .comment {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+
+  .comment img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+
+  .comment-content {
+    flex: 1;
+    background-color: #f1f1f1;
+    padding: 10px 15px;
+    border-radius: 8px;
+    position: relative;
+  }
+
+  .comment-content small {
+    font-size: 12px;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .comment-content p {
+    font-size: 14px;
+    color: black;
+    margin-top: 5px;
+    text-align: justify;
+  }
+
+  .comment-content .comment-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+
+  .comment-actions a {
+    font-size: 13px;
+    color: maroon;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .comment-actions a:hover {
+    color: goldenrod;
+  }
+
+  .reply {
+    margin-left: 65px;
+    margin-top: 10px;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .reply img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .reply .comment-content {
+    background-color: #e9ecef;
+  }
+
+  .comment-form {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .comment-form input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    font-size: 16px;
+    border: 3px solid maroon;
+    border-radius: 4px;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+    border-radius: 8px;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .modal-content button {
+    background-color: maroon;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .modal-content button:hover {
+    background-color: #8b0000;
+  }
+
+  .reply-form {
+    display: none;
+    margin-top: 10px;
+    margin-left: 65px;
+  }
+
+  .reply-form input[type="text"] {
+    width: calc(100% - 100px);
+  }
+
+  /* Responsive Styles */
+  @media (max-width: 1200px) {
+    .container {
+      padding: 0 2%;
+    }
+
+    .roomcontent {
+      grid-template-columns: 1fr 2fr;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .roomcontent {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .cover-image {
+      margin: 0 auto;
+    }
+
+    .roomcontent h1, .roomcontent p, .roomcontent small, .roomcontent span, .roomcontent span1 {
+      margin: 0;
+      text-align: center;
+    }
+
+    .btn-outline-danger {
+      margin-left: 0;
+      display: block;
+      margin: 10px auto 20px; /* Center and add margin */
+    }
+  }
+
+  @media (max-width: 768px) {
+    .roomcontent {
+      padding: 10px;
+    }
+
+    .comment-wrapper-container {
+      padding: 10px;
+    }
+
+    .comment-form {
+      max-width: 100%;
+    }
+
+    .comment-form input[type="text"] {
+      width: calc(100% - 20px);
+    }
+
+    .btn-outline-danger {
+      width: 100%; /* Make button full width */
+      padding: 12px;
+      font-size: 16px; /* Adjust font size */
+      display: block;
+      margin: 10px auto;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .comment img, .reply img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .roomcontent h1 {
+      font-size: 20px;
+    }
+
+    .roomcontent p {
+      font-size: 14px;
+    }
+
+    .btn-outline-danger {
+      font-size: 14px;
+      padding: 10px;
+    }
+  }
+  .back-button {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.back-button a {
+    color: maroon;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.back-button a:hover {
+    color: goldenrod;
+}
+
+.back-button i {
+    margin-right: 5px;
+}
+
+</style>
+
+<div class="container">
+  <div class="roomcontent">
+    <div>
+      <span>@{{ IP.host }} </span>
+      <img src="{{ IP.cover.url }}" class="cover-image" alt="IP Cover" />
+    </div>
+    <div>
+      <span1>{{ IP.created|timesince }} ago</span1>
+      <h1>{{ IP.tittle }}</h1>
+      <p>{{ IP.description }}</p>
+      
+      <small>Co-Authors: {% for author in IP.author.all %}
+        {{ author.last_name}} {{author.first_name}} {% if not forloop.last %}, {%endif%} 
+        {%empty%}
+           NA
+         {% endfor %}
+        
+      <small>Intellectual Property Type: {{ IP.type.type }}</small><br>
+      <small>Year Published: {{ IP.year }}</small><br>
+      {%if request.user.is_authenticated%}
+         <a href="{{ IP.file.url }}"  class="btn btn-outline-danger">View</a><br>
+      {% else %}
+         <a href="{{ IP.file.url }}#toolbar=0"  class="btn btn-outline-danger">View</a><br>
+      {% endif %}
+      
+    </div>
+  </div>
+
+  
+
+  <hr>
+
+{% if request.user.is_authenticated %}
+      <div class="comment-wrapper-container">
+        <div class="comment-wrapper">
+          <h4>CONVERSATION</h4>    
+
+          {% for comment in comments %}
+          <div class="comment">
+            <img src="{{ comment.user.profile.url }}" alt="User Avatar">
+            <div class="comment-content">
+              <small>
+                @{{ comment.user.username }} {{ comment.created|timesince }} ago 
+                {% if comment.user == request.user %}
+                <a href="#" onclick="openModal('deleteCommentModal{{ comment.id }}')">Delete</a>
+                {% endif %}
+              </small>
+              <p>{{ comment.content }}</p>
+              <hr>
+              <a href="#reply-form-{{ comment.id }}" data-bs-toggle="collapse">Reply</a>
+          
+              <!-- Reply Form -->
+              <div class="collapse" id="reply-form-{{ comment.id }}">
+              
+                <div class="replies">
+                  {% for reply in comment.commenreply_set.all %}
+                    <div class="comment">
+                      <img src="{{ reply.user.profile.url }}" alt="User Avatar">
+                      <div class="comment-content">
+                        <small>@{{ reply.user.username }} {{ reply.created|timesince }} ago
+                          {% if reply.user == request.user %}
+                          <a href="#" onclick="openModal('deleteReplyModal{{ reply.id }}')">Delete</a>
+                          {% endif %}
+                      
+                        </small>
+                        <p>{{ reply.content }}</p>
+                      </div>
+                    </div>
+                  {% empty %}
+                    <p>No replies yet.</p>
+                  {% endfor %}
+                </div>
+                <form method="POST" action="{% url 'IntellectualProperty' IP.id %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="comment_id" value="{{ comment.id }}" />
+                  <input type="text" name="reply_content" placeholder="Write your reply here..." required />
+                  <button type="submit" class="btn btn-outline-primary">Submit</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+            <p>No comments yet.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+
+        <div class="comment-form">
+          <form method="POST" action="{% url 'IntellectualProperty' IP.id %}">
+            {% csrf_token %}
+            <input type="text" name="content" placeholder="Write your message here..." required />
+            <button type="submit" class="btn btn-outline-primary">Submit</button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- Delete Comment Modal -->
+      {% for comment in comments %}
+      <div id="deleteCommentModal{{ comment.id }}" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeModal('deleteCommentModal{{ comment.id }}')">&times;</span>
+          <h2>Delete Comment</h2>
+          <p>Are you sure you want to delete this comment?</p>
+          <form action="{% url 'DeleteComment' comment.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+
+      {% for comment in comments %}
+        {% for reply in comment.commenreply_set.all %}
+        <div id="deleteReplyModal{{ reply.id }}" class="modal">
+          <div class="modal-content">
+            <span class="close" onclick="closeModal('deleteReplyModal{{ reply.id }}')">&times;</span>
+            <h2>Delete Reply</h2>
+            <p>Are you sure you want to delete this reply?</p>
+            <form action="{% url 'DeleteReply' reply.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit">Delete</button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      {% endfor %}
+{% endif %}
+
+
+
+<script>
+  function openModal(modalId) {
+    var modal = document.getElementById(modalId);
+    modal.style.display = "block";
+  }
+
+  function closeModal(modalId) {
+    var modal = document.getElementById(modalId);
+    modal.style.display = "none";
+  }
+</script>
+
+{% endblock %}
+

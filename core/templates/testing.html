@@ -1,0 +1,114 @@
+{% extends "Admin/adminmaster.html" %}
+
+{% block title %} Upload {% endblock %}
+
+{% block content %}
+
+<style>
+    .thead {
+        background-color: maroon;
+        color: white; /* Text color */
+        opacity: 0.7;
+    }
+    .custom-btn {
+        display: inline-block;
+        padding: 8px 15px;
+        background-color: goldenrod;
+        color: #fff; /* White text */
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+    }
+    .custom-btn:hover {
+        background-color: Orange; /* Hover color */
+    }
+    .card-title {
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        font-size: 30px;
+        
+    }
+    .search-container {
+        display: flex;
+        justify-content: space-between; /* Space between elements */
+        align-items: center; /* Center vertically */
+        margin-bottom: 20px; /* Space below the container */
+    }
+    .search-input {
+        width: 80%; /* Adjust width as needed */
+        padding: 10px; /* Padding */
+        font-size: 16px; /* Font size */
+        border: 1px solid #ccc; /* Border style */
+        border-radius: 4px; /* Rounded corners */
+    }
+</style>
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="search-container">
+                            <input type="text" id="search" class="search-input" placeholder="Search students..." onkeyup="searchTable()">
+                            <a href="{% url 'AddStud' %}" class="btn custom-btn"> + ADD STUDENT</a>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table id="example2" class="table table-bordered table-hover">
+                                <thead class="thead">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentTable">
+                                    {% for info in approvedStud %}
+                                    {% if info.is_student %}
+                                        <tr>
+                                            <td>{{ info.first_name }} {{ info.last_name }}</td>
+                                            <td>{{ info.username }}</td>
+                                            <td>{{ info.email }}</td>
+                                            <td>
+                                                <a class="btn btn-success">Approved</a> 
+                                        </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function searchTable() {
+    const input = document.getElementById('search');
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById('studentTable');
+    const rows = table.getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td');
+        let found = false;
+
+        for (let j = 0; j < cells.length; j++) {
+            if (cells[j]) {
+                const txtValue = cells[j].textContent || cells[j].innerText;
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        rows[i].style.display = found ? '' : 'none';
+    }
+}
+</script>
+
+{% endblock content %}

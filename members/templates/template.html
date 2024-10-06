@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="{% static 'style.css' %}">
+<body>
+
+
+<body>
+
+
+{% comment %}
+
+  {% if 'apple' in fruits %}
+    {% for i in fruits %}
+      {% if 'apple' in fruits and 'banana' in fruits %}
+          <p>apple and banana</p>
+      {% elif 'cherry' in fruits and 'durian' in fruits %}
+          <p>cherry and durian</p>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endcomment %}
+
+
+{% autoescape on %}
+ 
+
+{% for x in fruits %}
+  <li
+      {% if forloop.first %}
+        style='color:rgb(217, 205, 34);'
+      
+      #{% elif forloop.last %}#
+       #style='color:rgba(217, 95, 34, 0.505);'#
+      
+      {% endif %}
+  >{{ x }}</li>
+{% endfor %}
+
+
+
+{% endautoescape%}
+
+{% autoescape on %}
+  <p>In views.py you can see what the fruits variable looks like.</p>
+  <p>Back to <a href="{% url 'main' %}"><h2>Home</h2></a></p>
+{% endautoescape%}
+
+{% for a in mymembers %}
+  {% if a.lastname == 'Stark'%}
+    <p> <li>{{ a.lastname }}</li> </p>
+    <p> <li>{{ a.firstname }}</li> </p>
+    <p> <li>{{ a.email }}</li> </p>
+    <p> <li>{{ a.phone }}</li> </p>
+ 
+  {% elif a.lastname == 'Lannister'%}
+    <p> <li>{{ a.lastname }}</li> </p>
+    <p> <li>{{ a.firstname }}</li> </p>
+    <p> <li>{{ a.email }}</li> </p>
+    <p> <li>{{ a.phone }}</li> </p>
+  {%endif%}
+   <br>
+{%endfor%}
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+<form method="POST" action="" enctype="multipart/form-data" id="IntellectualPropertyForm"  data-departments-url="{% url 'ajax_load_departments' %}">
+    {% csrf_token %}
+    <h3>Review your submission </h3>
+    <p>Title: {{form_data.tittle}}</p>
+    <p>Main Author: {{mainauthor_name}} </p>
+    <p>Co Authors: 
+        <ul>
+        {% for coauthor in coauthors %}
+            <li>{{ coauthor.get_full_name }}</li>
+        {% endfor %}
+    </ul></p>
+    <p>File : {{form_data.file}}</p>
+
+    <button type="submit" id="submitButton" class="btn btn-danger btn-block">confirm</button>
+</form>

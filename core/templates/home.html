@@ -1,0 +1,172 @@
+{% extends "master.html" %}
+{% block title %} MIPO: Home{% endblock %}
+
+{% block content %}
+
+<style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('../static/admin/img/library.jpg') center/cover no-repeat fixed;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+  
+    body::before {
+      content: '';
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(111, 25, 38, 0.5);
+      z-index: -1;
+    }
+  
+    .content-container {
+      margin-top: 12rem;
+      text-align: center;
+      color: white;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+  
+    h2 {
+      font-size: 6rem;
+      font-weight: bold;
+      margin-bottom: 2rem;
+    }
+  
+    p {
+      font-size: 17px;
+      opacity: 0.8;
+      line-height: 30px;
+      margin: 0 auto;
+      padding: 0 10px;
+    }
+  
+    .searchbar {
+      height: 45px;
+      background-color: #f1f1f1;
+      border-radius: 50px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      margin-top: 80px;
+    }
+  
+    .searchbar input[type="text"] {
+      flex-grow: 1;
+      height: 100%;
+      font-size: 16px;
+      border: none;
+      background: none;
+      outline: none;
+      padding: 0 10px;
+      color: #333;
+    }
+  
+    .searchbar button {
+      border: none;
+      background-color: #f1f1f1;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+  
+    .searchbar button:hover {
+      background-color: goldenrod;
+    }
+  
+    /* Media Queries */
+    @media screen and (min-width: 1200px) {
+      h2 {
+        font-size: 6rem;
+      }
+      p {
+        font-size: 17px;
+      }
+      .searchbar {
+        padding: 0 20px;
+      }
+      .searchbar input[type="text"] {
+        font-size: 16px;
+      }
+    }
+  
+    @media screen and (min-width: 992px) and (max-width: 1199px) {
+      h2 {
+        font-size: 5rem;
+      }
+      p {
+        font-size: 16px;
+      }
+      .searchbar {
+        padding: 0 15px;
+      }
+      .searchbar input[type="text"] {
+        font-size: 15px;
+      }
+    }
+  
+    @media screen and (min-width: 768px) and (max-width: 991px) {
+      h2 {
+        font-size: 4rem;
+      }
+      p {
+        font-size: 14px;
+      }
+      .searchbar {
+        padding: 0 10px;
+      }
+      .searchbar input[type="text"] {
+        font-size: 14px;
+      }
+    }
+  
+    @media screen and (min-width: 576px) and (max-width: 767px) {
+      h2 {
+        font-size: 3.5rem;
+      }
+      p {
+        font-size: 12px;
+      }
+      .searchbar {
+        padding: 0 8px;
+      }
+      .searchbar input[type="text"] {
+        font-size: 12px;
+      }
+    }
+  
+    @media screen and (max-width: 575px) {
+      h2 {
+        font-size: 2.5rem;
+      }
+      p {
+        font-size: 10px;
+      }
+      .searchbar {
+        padding: 0 5px;
+      }
+      .searchbar input[type="text"] {
+        font-size: 10px;
+      }
+    }
+  </style>
+  
+
+<div class="container text-center content-container mt-6">
+  <h2>Intellectual Property Assets</h2>
+  <p class="mx-auto my-4 col-lg-10 col-md-12">
+    The IPMDS is a centralized system that stores, protects, and manages all of MSU's intellectual property assets in one place. It can be accessed by authorized users from anywhere in the world, and it provides a variety of features to help MSU manage its intellectual property assets more effectively.
+  </p>
+
+  <div class="searchbar mx-auto col-lg-20 col-md-10 col-sm-12">
+    <form action="{% url 'room' %}" class="w-100 d-flex" style="height: 35px; ">
+      <input id="search" type="text" placeholder="Search..." name="q" class="form-control" />
+      <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

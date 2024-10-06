@@ -1,0 +1,39 @@
+{% extends "master.html" %}
+
+{% block title %} Update User{% endblock %}
+
+{% block content %} 
+
+
+  
+   <center>
+      <div class="card" style="width: 18rem;">
+            <div class="card-body">
+            <form  class="form" method="POST" action=" " >
+               {% csrf_token %}
+       
+               {% for field in form %}
+       
+               <div class="form__group"> 
+                   
+                  <label>{{field.label}}</label> 
+                  {{field}}
+        
+               </div>
+              
+               {% endfor%}
+              
+              <div>
+               <button class="btn btn--main" type="submit">Update</button>
+              </div> 
+       
+       
+             </form>
+         </div>
+         
+      </div>
+
+      
+   </center>
+
+{% endblock%}

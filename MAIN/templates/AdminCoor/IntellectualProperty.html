@@ -1,0 +1,71 @@
+{% extends 'AdminCoor/admincoornav.html' %}
+
+{% block title %} Intellectual Property {% endblock %}
+
+{% block content %} 
+
+<style>
+  .roomcontent {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    text-align: justify;
+  }
+
+  .cover-image {
+    width: 40%; /* Full width of the container */
+    height: 150px; /* Fixed height for consistency */
+    object-fit: cover; /* Maintain aspect ratio while covering the area */
+    border-radius: 5px; /* Optional: rounded corners */
+  }
+</style>
+
+<div class="roomcontent">
+  <div>
+ 
+    <span>@{{IP.host}} </span>
+    <img src="{{IP.cover.url}}" class="cover-image" alt="IP Cover" />
+  </div>
+  <div>
+    <span>{{IP.created|timesince}} ago</span>
+    <h1>{{IP.tittle}}</h1>
+    <p>{{IP.description}}</p>
+    
+    <small>Author: {{IP.author}}</small><br>
+    <small>Intellectual Property Type: {{IP.type.type}}</small><br>
+    <small>Year Published: {{IP.year}}</small><br>
+    <a href="{{IP.file.url}}" download class="btn btn-outline-success">Download Abstract</a><br>
+  </div>
+</div>
+
+<small>{{IP.topic.name}}</small>
+
+<hr>
+
+<div class="comment-wrapper">
+  <h4>CONVERSATION</h4>    
+
+  {% for comment in comments %}
+    <div> 
+      <small>
+        @{{comment.user}} {{comment.created|timesince}} ago 
+
+        {% if comment.user == request.user %}
+        <a href="{% url 'DeleteComment' comment.id %}">Delete</a>
+        {% endif %}
+      </small>
+      <p>{{comment.content}}</p>
+      <hr>
+    </div>
+  {% endfor %}
+</div>
+
+{% if request.user.is_authenticated %}
+<div class="comment-form">
+  <form method="POST" action="">
+    {% csrf_token %}
+    <input type="text" name="content" placeholder="Write your message here..." />
+  </form>
+</div>
+{% endif %}
+
+{% endblock %}

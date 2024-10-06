@@ -1,0 +1,43 @@
+{% extends "AdminCoor/admincoormaster.html" %}
+
+{% block title %} HOME{% endblock %}
+
+{% block content %} 
+
+<style>
+ 
+  .searchbar {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+  }
+
+</style>
+
+<div class="searchbar"> 
+  <div></div>
+  <div>
+    <form class="d-flex" role="search" action="{% url 'room' %}">
+      <input class="form-control me-2" type="text" placeholder="Enter key..." name="q" />
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+  </div>
+</div>
+
+<div>
+  <h1>Test</h1>
+  <center>
+    <h5>Testing</h5>
+    {% if selected_index %}
+      <p>The pattern "{{ pattern }}" was found at the following indices:</p>
+      <ul>
+        {% for index in selected_index %}
+          <li>{{ index }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>The pattern "{{ pattern }}" was not found in the string "{{ string }}".</p>
+    {% endif %}
+  </center>
+</div>
+
+{% endblock %}

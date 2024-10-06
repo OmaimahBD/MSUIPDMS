@@ -1,0 +1,577 @@
+{% extends "master.html" %}
+
+{% block title %} Collge Page{% endblock %}
+
+{% block content %} 
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if page == 'login' %}MIPO: Log in{% else %}MIPO: Register{% endif %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/webp" sizes="180x180 " href="{% static 'admin/img/mipo.webp' %}">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
+    }
+    
+    body, html {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f4f4f9;
+    }
+    
+    /* Container Styles */
+    .login-container, .register-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 900px;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+        margin: 0 auto;
+    }
+    
+    .card {
+        display: flex;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 5px 5px 5px 5px rgba(128, 0, 0, 0.3); 
+        overflow: hidden;
+        width: 100%;
+    }
+    
+    .card-body {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+    
+    .row {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    
+    .col-md-6 {
+        width: 50%;
+        padding: 20px;
+    }
+    
+    @media (max-width: 768px) {
+        .card: {
+            margin-top: 20rem;
+        }
+        .col-md-6 {
+            
+            width: 100%;
+        }
+    }
+    
+    /* Form section */
+    .logo-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .logo {
+        max-width: 120px;
+    }
+    
+    .login-description, .register-description {
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        color: maroon;
+        font-family: 'Lucida Handwriting', cursive;
+    }
+    
+    .form-group {
+        margin-bottom: 20px; /* Increase spacing for better layout */
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: #555;
+    }
+    
+    .form-control {
+        width: calc(100% - 22px); /* Ensure full width minus padding */
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        font-size: 1em;
+        outline: none;
+        transition: border-color 0.3s;
+        margin: 5px 0; /* Ensure some margin around inputs */
+    }
+    
+    .form-control:focus {
+        border-color: maroon;
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+    }
+    
+    .forgot-password {
+        font-size: 0.9em;
+        color: #666;
+        text-decoration: none;
+    }
+    
+    .forgot-password:hover {
+        text-decoration: underline;
+    }
+    
+    .btn {
+        padding: 10px 15px;
+        border-radius: 5px;
+        border: none;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .btn-primary {
+        background-color: maroon;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background-color: goldenrod;
+    }
+    
+    /* Image section */
+    .login-image, .register-image {
+        width: 100%;
+        height: 100%;
+        border-radius: 0 8px 8px 0;
+        object-fit: cover;
+    }
+    
+    /* Signup and cancel links */
+    .signup-cancel, .login-cancel {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+    }
+    
+    .signup-link, .cancel-link,
+    .login-link {
+        color: maroon;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    
+    .signup-link:hover,
+    .cancel-link:hover,
+    .login-link:hover {
+        text-decoration: underline;
+    }
+    
+    /* Additional text styles */
+    .text-center {
+        text-align: center;
+        margin-top: 30px;
+    }
+    
+    h5 {
+        margin-bottom: 10px;
+        color: #333;
+        font-size: 1.1em;
+    }
+    
+    /* Register page specific */
+    .register-card {
+        display: flex;
+        flex-direction: column; 
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 5px 5px 5px 5px rgba(128, 0, 0, 0.3); 
+        overflow: hidden;
+        width: 100%;
+        max-width: 800px;
+        padding: 25px;
+        margin: 0 auto;
+    }
+    
+    .form-group {
+        width: 100%;
+        max-width: 500px;
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+        color: #333;
+    }
+    
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: maroon;
+        outline: none;
+    }
+    
+    .register-description {
+        font-size: 2.5em;
+        color: maroon;
+        margin-bottom: 30px;
+        text-align: center;
+
+    }
+    
+    .register-actions {
+        margin-top: 20px;
+    }
+    
+    .btn-register {
+        background-color: maroon;
+        color: white;
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .btn-register:hover {
+        background-color: goldenrod;
+    }
+    
+    .register-card {
+        width: 100%;
+        padding: 20px;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        margin: 0 auto;
+    }
+    
+    .register-description {
+        text-align: center;
+        color: maroon;
+        margin-bottom: 20px;
+        font-size: 2em;
+    }
+    
+    .form-fields {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 20px;
+    }
+    
+    @media (min-width: 768px) {
+        .form-fields {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+    }
+    @media (min-width: 480px) {
+        .form-fields {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+    }
+    
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+    
+    .form-group label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555;
+    }
+    
+    .form-group input, .form-group select, .form-group textarea {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    
+    .register-actions {
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .btn-register {
+        padding: 10px 20px;
+        background-color: maroon;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .btn-register:hover {
+        background-color: goldenrod;
+    }
+    
+    .text-center.login-cancel {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    
+    .login-link, .cancel-link {
+        text-decoration: none;
+        color: maroon;
+        font-weight: bold;
+    }
+    
+    .login-link:hover, .cancel-link:hover {
+        text-decoration: underline;
+    }
+    
+</style>
+
+<body>
+
+{% if page == 'login' %}
+
+<div class="login-container">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="login-description">
+                        Log in
+                    </h5>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="Username">Username:</label>
+                            <input type="text" id="Username" name="email" class="form-control" placeholder="Enter username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="Password">Password:</label>
+                            <input type="password" id="Password" name="Password" class="form-control" placeholder="Enter password" required>
+                        </div>
+                        <div class="form-actions">
+                            <a href="{% url 'password_reset' %}" class="forgot-password">Forgot password?</a>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </div>
+                    </form>
+                    <hr style="margin-top: 15px; ">
+                    <div class="signup-cancel">
+                        <a href="{% url 'RegisterView' %}" class="signup-link">Go to Register</a>
+                        <a href="{% url 'home' %}" class="cancel-link">Cancel</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <img src="{% static 'admin/img/mipo.webp' %}" alt="Login Image" class="login-image"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<!-- Include Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Include SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        
+        const errorMessage = "{{ errormessage|escapejs }}";
+        if (errorMessage) {
+            Swal.fire({
+                title: 'Error!',
+                text: errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Okay'
+            });
+        }
+    });
+</script>
+
+{% else %}
+<div class="register-container">
+    <div class="card">
+        <div class="register-card">
+            <h5 style="font-size: 40px;" class="register-description">Create Account</h5>
+            <form method="POST" id="IntellectualPropertyForm" data-departments-url="{% url 'ajax_load_departments' %}">
+                {% csrf_token %}
+                <div class="form-fields">
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label>{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="register-actions">
+                    <input type="submit" value="Register" id="submitButton" class="btn-register">
+                </div>
+                
+            </form>
+            <hr style="margin-top: 20px;">
+            <div class="text-center login-cancel" style="margin-top: 10px;">
+                <a href="{% url 'LoginView' %}" class="login-link">Back to Login</a>
+                <a href="{% url 'home' %}" class="cancel-link">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<!-- Include Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Include SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        
+        const errorMessage = "{{ errormessage|escapejs }}";
+        if (errorMessage) {
+            Swal.fire({
+                title: 'Error!',
+                text: errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Okay'
+            });
+        }
+
+        const successMessage = "{{ successmessage|escapejs }}";
+        if (successMessage) {
+            Swal.fire({
+                title: 'Success!',
+                text: successMessage,
+                icon: 'Success',
+                confirmButtonText: 'Okay'
+            });
+        }
+        // Dynamic department loading
+        $("#id_college").change(function () {
+            const url = $("#IntellectualPropertyForm").attr("data-departments-url");
+            const collegeId = $(this).val();
+
+            $.ajax({
+                url: url,
+                data: {
+                    'college_id': collegeId
+                },
+                success: function (data) {
+                    $("#id_department").html(data);
+                }
+            });
+        });
+
+        // Form submission handler
+        $('#submitButton').on('click', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Validate the form
+            if (validateForm()) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you want to submit the form?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, submit it!',
+                    cancelButtonText: 'No, cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $("#IntellectualPropertyForm").submit(); // Submit the form
+                    }
+                });
+            }
+        });
+
+        // Form validation function
+        function validateForm() {
+            let isValid = true;
+            // Select all input, select, and textarea elements within the form
+            const fields = $('#IntellectualPropertyForm').find('input, select, textarea');
+
+            fields.each(function() {
+                const field = $(this);
+                if (field.prop('required') && !field.val().trim()) {
+                    isValid = false;
+                    // Highlight the field with a red border to indicate the error
+                    field.css('border', '2px solid red');
+                    field.on('input', function() {
+                        // Reset border color on input
+                        if (field.val().trim()) {
+                            field.css('border', '');
+                        }
+                    });
+                }
+            });
+
+            if (!isValid) {
+                Swal.fire({
+                    title: 'Form Incomplete',
+                    text: 'Please fill out all required fields before proceeding.',
+                    icon: 'error',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Okay!',
+                });
+            }
+
+            return isValid;
+
+          
+        }
+
+        // Menu toggle script
+        var el = document.getElementById("wrapper");
+        var toggleButton = document.getElementById("menu-toggle");
+
+        toggleButton.onclick = function () {
+            el.classList.toggle("toggled");
+        };
+    });
+</script>
+
+{% endif %}
+
+</body>
+</html>
+
+</body>
+</html>
+{% endblock %}

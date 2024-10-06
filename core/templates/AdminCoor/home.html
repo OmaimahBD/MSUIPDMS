@@ -1,0 +1,307 @@
+{% extends "AdminCoor/admincoormaster.html" %}
+
+{% block title %} DASHBOARD {% endblock %}
+
+{% block content %} 
+<style>
+
+
+
+    
+    .thead {
+        background-color: maroon;
+        color: white; /* Text color */
+        opacity: 0.7;
+        font-size: 13px;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 300px; /* Adjust the width as needed */
+    }
+
+    #page-content-wrapper {
+        flex: 1;
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .chart-container {
+        width: 100%; /* Adjusts the container to take full width */
+        height: auto; /* Ensures the container maintains aspect ratio */
+        max-width: 1200px; /* Optional max-width */
+        margin: 0 auto; /* Centers the container */
+        position: relative;
+    }
+
+    canvas#myChart {
+        width: 100% !important; /* Forces the canvas to fill the container */
+        height: auto !important; /* Keeps the height proportional */
+    }
+
+    /* Style for the Download Button */
+    .download-button {
+        background-color: maroon;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        position: absolute;
+        top: 10px; /* Adjust as needed */
+        right: 10px; /* Adjust as needed */
+        transition: background-color 0.3s ease;
+    }
+
+    .download-button:hover {
+        background-color: darkred;
+    }
+    #wrapper.toggled #sidebar-wrapper {
+        width: 300px; /* Adjust the width as needed */
+    }
+
+    #page-content-wrapper {
+        flex: 1;
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .card-container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .card-container .col-md-3 {
+        margin-bottom: 20px;
+    }
+
+    .p-3 {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background-color: maroon; /* Maroon background */
+        color: maroon; /* White text color */
+    }
+
+    .p-3:hover {
+        transform: translateY(-10px);
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .thead {
+        background-color: maroon;
+        color: white; /* Text color */
+        opacity: 0.7;
+        font-size: 13px;
+    }
+
+    .chart-container {
+        width: 100%; /* Adjusts the container to take full width */
+        height: auto; /* Ensures the container maintains aspect ratio */
+        max-width: 1200px; /* Optional max-width */
+        margin: 0 auto; /* Centers the container */
+        position: relative;
+    }
+
+    canvas#myChart {
+        width: 100% !important; /* Forces the canvas to fill the container */
+        height: auto !important; /* Keeps the height proportional */
+    }
+</style>
+
+<div id="page-content-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle" style="color:maroon;"></i>
+            <h2 class="fs-2 m-0" style="font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; color: maroon;">
+                Dashboard
+            </h2>
+        </div>
+    </nav>
+    <div class="container-fluid px-4">
+        <div class="row card-container">
+            {% for type in types %}
+
+            {% if type.type == 'Copyright'%}
+            <div class="col-md-3">
+                <a href="{% url 'AdminIPList' %}?q={{ type.type }}" style="text-decoration: none; color: inherit;">
+                    <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
+                        <div>
+                            <h3 class="fs-2">{{total_copyrights}}</h3>
+                            <p class="fs-5">{{ type.type }}</p>
+                        </div>
+                        <i class="fa fa-copyright fs-1 border rounded-full p-3" style="color: white;"></i>
+                    </div>
+                </a>
+            </div>
+
+            {% elif type.type == 'Patent'%}
+            <div class="col-md-3">
+                <a href="{% url 'AdminIPList' %}?q={{ type.type }}" style="text-decoration: none; color: inherit;">
+                    <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
+                        <div>
+                            <h3 class="fs-2">{{total_patents}}</h3>
+                            <p class="fs-5">{{ type.type }}</p>
+                        </div>
+                        <i class="fa fa-gavel fs-1 border rounded-full p-3" style="color: white;"></i>
+                    </div>
+                </a>
+            </div>
+            {% elif type.type == 'Trademark'%}
+            <div class="col-md-3">
+                <a href="{% url 'AdminIPList' %}?q={{ type.type }}" style="text-decoration: none; color: inherit;">
+                    <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
+                        <div>
+                            <h3 class="fs-2">{{total_trademarks}}</h3>
+                            <p class="fs-5">{{ type.type }}</p>
+                        </div>
+                        <i class="fa fa-trademark fs-1 border rounded-full p-3" style="color: white;"></i>
+                    </div>
+                </a>
+            </div>
+
+            {% endif %}
+            {% endfor %}
+            <div class="col-md-3">
+                <a href="{% url 'AdminStudList' %}" style="text-decoration: none; color: inherit;">
+                    <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
+                        <div>
+                            <h3 class="fs-2">{{users_count}}</h3>
+                            <p class="fs-5">User </p>
+                        </div>
+                        <i class="fa fa-users fs-1 border rounded-full p-3" style="color: white;"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+      
+
+    <div class="container-fluid mt-0">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mt-0">
+                    <div class="chart-container">
+                        <canvas id="myChart"></canvas>
+                        <button id="downloadReport" class="download-button">Download Report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+
+<script>
+    // Ensure these variables are passed correctly from Django views
+    const ipTitles = {{ ip_titles|safe }};
+    const ipViews = {{ ip_views|safe }};
+    const ipLinks = {{ ip_links|safe }}; 
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    const backgroundColors = [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(199, 199, 199, 0.2)',
+        'rgba(83, 102, 255, 0.2)',
+        'rgba(104, 132, 245, 0.2)',
+        'rgba(255, 99, 71, 0.2)'
+    ];
+
+    const borderColors = [
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(199, 199, 199, 1)',
+        'rgba(83, 102, 255, 1)',
+        'rgba(104, 132, 245, 1)',
+        'rgba(255, 99, 71, 1)'
+    ];
+
+    const data = {
+        labels: ipTitles,
+        datasets: [{
+            label: 'Most Viewed IP asset',
+            data: ipViews,
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
+            borderWidth: 1
+        }]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animations: {
+                tension: {
+                    duration: 1000,
+                    easing: 'easeOutQuad',
+                    from: 1,
+                    to: 0,
+                    loop: true
+                },
+                borderWidth: {
+                    duration: 300,
+                    easing: 'easeOutQuad',
+                    from: 0,
+                    to: 2,
+                    loop: true
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value.toLocaleString(); // Format numbers with commas
+                        }
+                    }
+                }
+            },
+            onClick: (event, elements) => {
+                if (elements.length > 0) {
+                    const elementIndex = elements[0].index;
+                    const ipLink = ipLinks[elementIndex];
+                    window.location.href = ipLink;
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: (context) => {
+                            return `Views: ${context.raw}`; // Correct syntax for template literals
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    const myChart = new Chart(ctx, config);
+
+    // Download functionality
+    document.getElementById('downloadReport').addEventListener('click', () => {
+        html2canvas(document.querySelector('.chart-container')).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            pdf.addImage(imgData, 'PNG', 10, 10, 190, 0);
+            pdf.save('chart-report.pdf');
+        });
+    });
+</script>
+    
+    {% endblock content %}

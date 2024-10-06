@@ -1,0 +1,190 @@
+{% extends "AdminCoor/admincoormaster.html" %}
+
+{% block title %} Register {% endblock %}
+
+{% block content %}
+    
+Vilmalyn Moreno Sanchez
+<style>
+
+    .thead {
+        background-color: maroon;
+        color: white; /* Text color */
+        opacity: 0.7;
+        font-size: 13px;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 300px; /* Adjust the width as needed */
+    }
+
+    #page-content-wrapper {
+        flex: 1;
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .chart-container {
+        width: 100%; /* Full width of the container */
+        height: auto; /* Adjusts height proportionally */
+        max-width: 1200px; /* Optional max-width */
+        margin: 0 auto; /* Centers the container */
+        position: relative;
+    }
+
+    canvas#myChart {
+        width: 100% !important; /* Forces the canvas to fill the container */
+        height: 600px !important; /* Keeps the height proportional */
+    }
+
+    /* Style for the Download Button */
+    .download-button {
+        background-color: maroon;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        position: absolute;
+        top: 10px; /* Adjust as needed */
+        right: 10px; /* Adjust as needed */
+        transition: background-color 0.3s ease;
+    }
+
+    .download-button:hover {
+        background-color: darkred;
+    }
+</style>
+
+
+<div id="page-content-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle" style="color:maroon;"></i>
+            <h2 class="fs-2 m-0" style="font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; color: maroon;">
+                Number of Intellectual Property
+            </h2>
+        </div>
+    </nav>
+    <div class="container-fluid mt-0">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mt-0">
+                    <div class="chart-container">
+                        <button id="downloadReport" class="download-button">Download Report</button>
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const labels = {{ labels|safe }};
+        const patents = {{ patents|safe }};
+        const trademarks = {{ trademarks|safe }};
+        const copyrights = {{ copyrights|safe }};
+
+        const data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Patents',
+                    data: patents,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Trademarks',
+                    data: trademarks,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Copyrights',
+                    data: copyrights,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+            ]
+        };
+
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animations: {
+                    tension: {
+                        duration: 1000,
+                        easing: 'easeOutQuad',
+                        from: 1,
+                        to: 0,
+                        loop: false
+                    },
+                    borderWidth: {
+                        duration: 300,
+                        easing: 'easeOutQuad',
+                        from: 0,
+                        to: 2,
+                        loop: false
+                    },
+                    scale: {
+                        duration: 1000,
+                        easing: 'easeOutBounce',
+                        from: {
+                            x: 0,
+                            y: 0
+                        },
+                        to: {
+                            x: 1,
+                            y: 1
+                        },
+                        loop: false
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Number of IPs per College'
+                    },
+                    datalabels: {
+                        color: '#444',
+                        font: {
+                            weight: 'bold'
+                        },
+                        anchor: 'end',
+                        align: 'top'
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true
+                    }
+                }
+            }
+        };
+
+        var myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    });
+</script>
+
+{% endblock %}

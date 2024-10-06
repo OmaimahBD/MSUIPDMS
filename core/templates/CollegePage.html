@@ -1,0 +1,16 @@
+{% extends "master.html" %}
+
+{% block title %} Collge Page{% endblock %}
+
+{% block content %} 
+<a href="{% url 'room' %}"><span>Back </span></a>
+<h5>By Colleges</h5>
+<hr>
+{% for topic in topics %}
+  
+<div><a href=" {% url 'room' %}?q={{topic.name}}"><h4>{{topic.name}}</h4></a></div>
+  
+{% endfor%}
+  
+  
+{% endblock%}

@@ -1,0 +1,186 @@
+{% extends "AdminCoor/admincoormaster.html" %}
+
+{% block title %} upload{% endblock %}
+
+{% block content %} 
+<style>
+    .thead {
+        background-color: maroon;
+        color: white; /* Text color */
+        opacity: 0.7;
+        font-size: 13px;
+    }
+    .custom-btn {
+        display: inline-block;
+        padding: 8px 10px;
+        background-color: goldenrod;
+        color: #fff; /* White text */
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+    }
+    .custom-btn:hover {
+        background-color: Orange; /* Hover color */
+    }
+    .card-title {
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        font-size: 20px;
+    }
+    .search-container {
+        display: flex;
+        justify-content: space-between; /* Space between elements */
+        align-items: center; /* Center vertically */
+        margin-bottom: 20px; /* Space below the container */
+    }
+    .search-input {
+        width: 100%; /* Adjust width as needed */
+        padding: 10px; /* Padding */
+        font-size: 13px; /* Font size */
+        border: 1px solid #ccc; /* Border style */
+        border-radius: 4px; /* Rounded corners */
+    }
+    #wrapper.toggled #sidebar-wrapper {
+        width: 300px; /* Adjust the width as needed */
+    }
+    #page-content-wrapper {
+        flex: 1;
+        width: 100%;
+        overflow-x: hidden;
+    }
+    .cover-image {
+        width: 40px; /* Limit the max width of the cover image */
+        height: 50px;
+    }
+</style>
+
+    <div id="page-content-wrapper">
+        <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle" style="color:maroon;"></i>
+                <h2 class="fs-2 m-0" style="font-family: Arial, sans-serif; font-size: 5px; font-weight: bold; color: maroon;">Upload Requests</h2>
+            </div>
+        </nav>
+        <div class="container-fluid mt-0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card mt-0">
+                        <div class="card-header">
+                            <h3 class="card-title">USERS UPLOAD FOR APPROVAL</h3>
+                            <div class="card-tools">
+                                <!-- Optional: Add a button for additional functionality -->
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <!-- Search Container -->
+                            <div class="search-container">
+                                <input type="text" id="search" class="search-input" placeholder="🔍︎ Search uploads..." onkeyup="searchTable()">
+                            </div>
+
+                            <div class="table-responsive">
+                                <table id="uploadTable" class="table table-bordered table-hover">
+                                    <thead class="thead">
+                                        <tr>
+                                            <th>Cover</th>
+                                            <th>Title</th>
+                                            <th>College</th>
+                                            <th>Main Author</th>
+                                            <th>Co-Author</th>
+                                            <th>View Full Copy</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="font-size: 14px;"> 
+                                        {% for ip in IP %}
+                                            <tr>
+                                                <td>
+                                                    {% if ip.cover %}
+                                                        <img src="{{ ip.cover.url }}" class="cover-image" alt="Cover Image" />
+                                                    {% else %}
+                                                        NA
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ ip.tittle }}</td>
+                                                <td>{{ ip.college }}</td>
+                                                <td>{{ ip.mainauthor.last_name }}, {{ ip.mainauthor.first_name }} </td>
+                                                <td> 
+                                                    {% for author in ip.author.all %}
+                                                        {{ author.last_name }}, {{ author.first_name }}{% if not forloop.last %}, {% endif %}
+                                                    {% empty %}
+                                                        NA
+                                                    {% endfor %}
+                                                </td>
+                                                <td>
+                                                    {% if ip.file %}
+                                                        <a href="{{ ip.file.url }}" target="_blank">View File</a>
+                                                    {% else %}
+                                                        NA
+                                                    {% endif %}
+                                                </td>
+                                                <td>Pending</td>
+                                                <td>
+                                              
+                                                    <a  href="{% url 'Admincheckplag' ip.id %}" style="font-size: 14px;"class="btn btn-warning">Check Plagiarism </a>
+                                              
+                                               {% if ip.is_pending %}
+                                                    {% if not ip.is_approved%}
+                                                         <a  href="{% url 'AdminApproveUpload' ip.id %}" style="font-size: 14px;"class="btn btn-success">Approve</a>
+                                                    {% endif %}
+                                                
+                                                    {% if not ip.is_approved %}
+                                                        <a  href="{% url 'AdminDisApproveUpload' ip.id %}" style="font-size: 14px;" class="btn btn-danger">Disapprove </a>
+                                                    {% endif %}
+                                                {% endif %}
+                                              
+                                            </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    var el = document.getElementById("wrapper");
+    var toggleButton = document.getElementById("menu-toggle");
+
+    toggleButton.onclick = function () {
+        el.classList.toggle("toggled");
+    };
+
+    function searchTable() {
+        const input = document.getElementById('search');
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById('uploadTable');
+        const rows = table.getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName('td');
+            let found = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j]) { 
+                    const txtValue = cells[j].textContent || cells[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            rows[i].style.display = found ? '' : 'none';
+        }
+    }
+</script>
+{% endblock %}

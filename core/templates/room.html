@@ -1,0 +1,571 @@
+{% extends "master.html" %}
+
+        {% block title %} MIPO: IP Assets {% endblock %}
+
+        {% block content %}
+
+        <style>
+            
+            body {
+                font-family: 'Roboto', sans-serif;
+                color: #333;
+                margin: 0;
+                padding: 0;
+                background-color: #f5f5f5; /* Light grey background to complement maroon */
+            }
+
+            /* Sidebar */
+            .filter-section {
+                position: fixed; /* Fix the sidebar */
+                top: 70px; /* Adjust based on header height */
+                left: 0;
+                width: 400px; /* Width of the sidebar */
+                background-color: #fff;
+                border-right: 1px solid #ddd;
+                padding: 20px;
+                height: calc(100vh - 80px); /* Full height minus header */
+                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+                overflow-y: auto; /* Enable scrolling */
+                margin-left: 155px;
+                transition: transform 0.3s ease; /* Smooth transition for toggling */
+            }
+
+            .filter-section h5 {
+                color: maroon;
+                font-family: 'Roboto', sans-serif;
+                font-size: 35px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+
+            .filter-section a {
+                text-decoration: none;
+                color: #333;
+                font-size: 18px;
+                display: block;
+                transition: color 0.3s;
+                padding: 1px 5px; /* Adjust padding for spacing */
+                border-radius: 6px; /* Rounded corners */
+            }
+
+            .filter-section a:hover {
+                color: #fff; /* Text color on hover */
+                background-color: maroon; /* Background color on hover */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow effect */
+                transform: scale(1.05); /* Slightly enlarge the box */
+            }
+
+            .filter-section hr {
+                border: none;
+                border-top: 1px solid #ddd;
+                margin: 15px 0;
+            }
+
+            /* Main Content */
+
+            .room-container {
+                display: grid;e
+                grid-template-columns: 1fr 4fr; /* Filters on the left, content on the right */
+                gap: 1px; /* Space between columns */
+                margin: 5rem auto; /* Center the container with auto margins */
+                max-width: 800px; /* Optional: maximum width for the container */
+                padding: 0 1rem; /* Add padding to the left and right */
+                margin-right: 135px;
+                position: relative;
+            }
+
+            .roomcontent {
+                background-color: #fff;
+                padding: 20px;
+                background:#ffffff;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                display: flex; /* Use flexbox for alignment */
+                align-items: flex-start; /* Align items at the start */
+                gap: 40px; /* Space between image and text */
+            }
+
+            .cover-image {
+                width: 120px;
+                height: 160px;
+                object-fit: cover;
+                border-radius: 8px; /* Rounded corners */
+            }
+
+            .roomcontent .text-content {
+                flex: 1; /* Allow text content to take remaining space */
+            }
+
+            .roomcontent h1 {
+                color: maroon;
+                font-weight: bold;
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+
+            .roomcontent p {
+                font-size: 16px;
+                color: black;
+                margin-bottom: 20px;
+                text-align: justify;
+            }
+
+            .roomcontent small {
+                font-size: 13px;
+                color: #777;
+                font-style: italic;
+                display: block; /* Make small text appear on a new line */
+                margin-bottom: 5px;
+            }
+
+            .roomcontent span {
+                color: black;
+                font-style: italic;
+                font-size: 15px;
+                display: block;
+                margin-bottom: 10px;
+            }
+            .btn--link {
+                color: black;
+                text-decoration: none;
+                border-radius: 4px;
+                font-weight: bold;
+                display: inline-block;
+                padding: 10px 20px; /* Adjust padding for text size */
+                transition: background-color 0.3s;
+                text-align: center; /* Center-align text */
+            }
+
+            hr {
+                border: none;
+                border-top: 1px solid #ddd;
+                margin: 20px 0;
+            }
+
+            /* Modal styles */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+            .modal-content {
+                background-color: #fefefe;
+                margin: 10% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%;
+                max-width: 500px;
+                position: relative;
+                border-radius: 8px;
+            }
+
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .modal-content button {
+                background-color: maroon;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin-top: 10px;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+
+            .modal-content button:hover {
+                background-color: #8b0000;
+            }
+            .search-input {
+                width: 86%;
+                padding: 13px;
+                border: 2px solid maroon;
+                border-radius: 4px;
+                margin-bottom: 10px;
+                font-size: 15px;
+                font-weight: bold;
+            }
+            
+            .search-button {
+                background-color: maroon;
+                color: white;
+                border: none;
+                padding: 13px 12px;
+                cursor: pointer;
+                border-radius: 4px;
+                transition: background-color 0.3s;
+            }
+            
+            .search-button:hover {
+                background-color: goldenrod; /* Darker maroon */
+            }
+            
+            .card {
+                display: flex;
+                flex-direction: column;
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                width: 100%;
+                max-width: 450px;
+                padding: 10px 10px;
+                align-items: center; /* Center items horizontally */
+                justify-content: center; /* Center items vertically */
+                position: relative;
+                margin: auto; /* Center horizontally */
+                margin-top: 18rem; /* Adjust top margin for positioning */
+            }
+            
+
+            .card p {
+                font-size: 20px;
+                color: #555;
+                margin-top: 50px;
+            }
+
+            .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: maroon;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-button:hover {
+            background-color: goldenrod;
+        }
+
+        .toggle-button {
+            display: none; /* Hidden by default */
+            background-color: maroon;
+            color: white;
+            border: none;
+            padding: 1px;
+            width: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 17px;
+            text-align: center;
+            margin: 10px;
+        }
+    
+        @media (max-width: 1200px) {
+            .room-container {
+                grid-template-columns: 1fr 3fr; /* Adjust layout for medium screens */
+            }
+            .toggle-button {
+                display: block;
+            }
+            
+            .filter-section {
+                display: none;
+                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                background-color: #fff;
+                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                overflow-y: auto;
+                z-index: 1000;
+            }
+        
+            .filter-section.show {
+                display: block;
+                margin-left: 0;
+                margin-top: 2.6rem;
+                height: auto;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .room-container {
+                grid-template-columns: 1fr; /* Single column layout on small screens */
+                margin: 2rem auto;
+            }
+            .filter-section {
+                width: 100%;
+                position: static;
+                height: auto;
+                padding: 15px;
+            }
+            .roomcontent {
+                gap: 10px; /* Adjust spacing for smaller screens */
+            }
+            .toggle-button {
+                display: block;
+            }
+            
+            .filter-section {
+                display: none;
+                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                background-color: #fff;
+                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                overflow-y: auto;
+                z-index: 1000;
+            }
+        
+            .filter-section.show {
+                display: block;
+                margin-left: 0;
+                margin-top: 2.6rem;
+                height: 780px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .toggle-button {
+                display: block;
+            }
+            
+            .filter-section {
+                display: none;
+                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                background-color: #fff;
+                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                overflow-y: auto;
+                z-index: 1000;
+            }
+        
+            .filter-section.show {
+                display: block;
+                margin-left: 0;
+                margin-top: 2.6rem; /* Adjust based on your layout */
+                height: 1800px;
+                background-color: #fff;
+                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                overflow-y: auto;
+                top: 0;
+                width: 100%;
+                z-index: 999; /* Lower z-index to be behind the navbar */
+            }
+            .hidden {
+                display: none;
+            }
+            
+            /* Show element */
+            .visible {
+                display: block;
+            }
+        }
+        .no-results {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px; /* Adjust based on your design */
+            text-align: center;
+            font-size: 25px;
+            color: #555;
+            border-radius: 8px;
+            box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+            color: maroon;
+            font-weight: bold;
+            margin-top: 11rem;
+        }
+        
+        </style>
+
+
+        {% if search_performed %}
+
+        {% if IP %}
+            <!-- Room Container with Results -->
+            <div class="room-container">
+                <button style="margin-top: 4rem" class="toggle-button" onclick="toggleFilter()">☰</button>
+                <!-- Filter Section on the Left -->
+                <div class="filter-section">
+                    <button class="toggle-button" onclick="toggleFilter()">☰</button>
+                    <form method="get" action="{% url 'room' %}">
+                        <input type="text" name="q" placeholder="Search..." value="{{ request.GET.q }}" class="search-input">
+                        <button type="submit" class="search-button">🔍︎</button>
+                    </form>
+                    <hr>
+                    <h5>BY COLLEGES</h5>
+                    <hr>
+                    {% for topic in topics %}
+                    <div>
+                        <a href="{% url 'room' %}?q={{ topic.name }}">
+                            <h4>{{ topic.name }}</h4>
+                        </a>
+                    </div>
+                    {% endfor %}
+                    <hr>
+                    <h5>INTELLECTUAL PROPERTY</h5>
+                    <hr>
+                    {% for type in types %}
+                    <div>
+                        <a href="{% url 'room' %}?q={{ type.type }}">
+                            <h4>{{ type.type }}</h4>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Room Content Section -->
+                <div id="room-content">
+                    {% if not IP %}
+                    <div class="no-results visible">
+                        <p>No results found for "{{ query }}"</p>
+                    </div>
+                    {% else %}
+                        {% for ip in IP %}
+                        <div class="roomcontent">
+                            <div>
+                                <span>@{{ ip.host.username }} </span>
+                                <a href="/IntellectualProperty/{{ ip.id }}">
+                                    {% if ip.cover %}
+                                    <img src="{{ ip.cover.url }}" alt="Cover Image" class="cover-image" />
+                                    {% else %}
+                                    NA
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="text-content">
+                                <span>{{ ip.created|timesince }} ago</span>
+                                <h1>{{ ip.tittle }}</h1>
+                                <p>{{ ip.description }}</p>
+                                <small>Main Author: {{ip.mainauthor.last_name }} {{ip.mainauthor.first_name }} </small>
+                                <small>Co-Authors: {% for author in ip.author.all %}
+                                                   {{ author.last_name}} {{author.first_name}} {% if not forloop.last %}, {%endif%} 
+                                                   {%empty%}
+                                                      NA
+                                                    {%endfor%}</small>
+                                <small>Year Published: {{ ip.year }}</small>
+                               
+                            </div>
+                        </div>
+
+                      
+                        <hr style="width: 100%; ">
+                        {% endfor %}
+
+                       
+                    {% endif %}
+                </div>
+            </div>
+
+        {% else %}
+            <!-- No Results Found Message -->
+            <div class="room-container">
+                <div class="filter-section">
+                    <!-- Same filter section as before -->
+                    <form method="get" action="{% url 'room' %}">
+                        <input type="text" name="q" placeholder="Search..." value="{{ request.GET.q }}" class="search-input">
+                        <button type="submit" class="search-button">🔍︎</button>
+                    </form>
+                    <hr>
+                    <h5>BY COLLEGES</h5>
+                    <hr>
+                    {% for topic in topics %}
+                    <div>
+                        <a href="{% url 'room' %}?q={{ topic.name }}">
+                            <h4>{{ topic.name }}</h4>
+                        </a>
+                    </div>
+                    {% endfor %}
+                    <hr>
+                    <h5>INTELLECTUAL PROPERTY</h5>
+                    <hr>
+                    {% for type in types %}
+                    <div>
+                        <a href="{% url 'room' %}?q={{ type.type }}">
+                            <h4>{{ type.type }}</h4>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="no-results visible">
+                    <p>No results found for "{{ query }}"</p>
+                </div>
+            </div>
+        {% endif %}
+
+    {% else %}
+        <div class="room-container">
+            <div class="filter-section">
+                <!-- Same filter section as before -->
+                <form method="get" action="{% url 'room' %}">
+                    <input type="text" name="q" placeholder="Search..." value="{{ request.GET.q }}" class="search-input">
+                    <button type="submit" class="search-button">🔍︎</button>
+                </form>
+                <hr>
+                <h5>BY COLLEGES</h5>
+                <hr>
+                {% for topic in topics %}
+                <div>
+                    <a href="{% url 'room' %}?q={{ topic.name }}">
+                        <h4>{{ topic.name }}</h4>
+                    </a>
+                </div>
+                {% endfor %}
+                <hr>
+                <h5>INTELLECTUAL PROPERTY</h5>
+                <hr>
+                {% for type in types %}
+                <div>
+                    <a href="{% url 'room' %}?q={{ type.type }}">
+                        <h4>{{ type.type }}</h4>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="no-results visible">
+                <p>No results found, please enter a keyword.</p>
+            </div>
+        </div>
+    {% endif %}
+    <script>
+        function toggleFilter() {
+            var filterSection = document.querySelector('.filter-section');
+            filterSection.classList.toggle('show');
+        }
+    </script>
+
+
+    {% endblock %}

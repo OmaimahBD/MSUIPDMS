@@ -1,0 +1,109 @@
+{% extends 'AdminCoor/admincoornav.html' %}
+
+
+{% block title %} Room{% endblock %}
+
+{% block content %} 
+
+<style>
+  .room-container {
+    display: grid;
+    grid-template-columns: 1fr 4fr; /* Filters on the left, content on the right */
+    gap: 20px; /* Space between columns */
+    margin: 5rem auto; /* Center the container with auto margins */
+    max-width: 1200px; /* Optional: maximum width for the container */
+    padding: 0 1rem; /* Add padding to the left and right */
+  }
+
+  .roomcontent {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    text-align: justify;
+    margin-bottom: 20px; /* Space between room content blocks */
+    margin-left: 5rem;
+  }
+
+  .filter-section {
+    padding: 3em; /* Padding for the filter section */
+    background-color: #f9f9f9; /* Light background */
+    border: 1px solid #ddd; /* Optional border */
+    border-radius: 5px; /* Rounded corners */
+  }
+
+  h3, h5 {
+    margin: 10px 0; /* Margin for headings */
+  }
+
+  .cover-image {
+    width: 60%; /* Full width of the container */
+    height: 150px; /* Fixed height for consistency */
+    object-fit: cover; /* Maintain aspect ratio while covering the area */
+    border-radius: 5px; /* Optional: rounded corners */
+  }
+</style>
+
+<div class="room-container">
+
+  <!-- Filter Section on the Left -->
+  <div class="filter-section">
+    <span>{{IP_count}} results</span><br>
+    <div><h3>Filter</h3><hr></div>
+    <h5>By Colleges</h5>
+    <hr>
+    <div><a href="{% url 'admincoorroom' %}"><h4>All</h4></a></div>
+    {% for topic in topics %}
+      <div><a href="{% url 'room' %}?q={{topic.name}}"><h4>{{topic.name}}</h4></a></div>
+    {% endfor %}
+    <a class="btn btn--link" href="{% url 'admincoorroom' %}"><h5>Less...</h5></a>
+
+    <hr>
+    <h5>Intellectual Property</h5>
+    <hr>
+    {% for type in types %}
+      <div><a href="{% url 'admincoorroom' %}?q={{type.type}}"><h4>{{type.type}}</h4></a></div>
+    {% endfor %}
+  </div>
+
+  <!-- Main Content on the Right -->
+  <div>
+    
+    {% for ip in IP %}
+      {% if request.user == ip.host %}
+        <a href="{% url 'UpdateIntellectualProperty' ip.id %}">Edit</a>
+        <a href="{% url 'DeleteIntellectualProperty' ip.id %}">Delete</a>
+      {% endif %}
+
+      <div class="roomcontent">
+        <div>
+          <span>@{{ip.host.username}} </span>
+          <a href="/IntellectualProperty/{{ip.id}}">
+            {% if ip.cover %}
+              <img src="{{ip.cover.url}}" alt="Cover Image" class="cover-image" />
+            {% else %}
+              NA
+            {% endif %}
+          </a>
+        </div>
+        <div>
+          <span>{{ip.created|timesince}} ago</span>
+          <h1>{{ip.tittle}}</h1>
+          <p>{{ip.description}}</p>
+          <small>Author: {{ip.author}}</small><br>
+          <small>Year Published: {{ip.year}}</small><br>
+        </div>
+      </div>
+
+      <small>{{ip.topic.name}}</small>
+      <hr>
+    {% endfor %}
+
+    {% if request.user.is_authenticated %}
+      <a class="btn btn--link" href="{% url 'IntellectualPropertyPage' %}"><h4>Show more results...</h4></a>
+    {% else %}
+      <a class="btn btn--link" href="#" onclick="openModal('loginModal')"><h4>Show more results...</h4></a>
+    {% endif %}
+  </div>
+
+</div>
+
+{% endblock %}
