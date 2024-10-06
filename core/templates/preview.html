@@ -1,3 +1,8 @@
+{% extends "master.html" %}
+{% block title %} MIPO: Home{% endblock %}
+
+{% block content %}
+
 <form method="POST" action="" enctype="multipart/form-data" id="IntellectualPropertyForm"  data-departments-url="{% url 'ajax_load_departments' %}">
     {% csrf_token %}
     <h3>Review your submission </h3>
@@ -13,3 +18,4 @@
 
     <button type="submit" id="submitButton" class="btn btn-danger btn-block">confirm</button>
 </form>
+{% endblock %}
