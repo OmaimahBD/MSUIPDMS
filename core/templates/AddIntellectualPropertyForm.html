@@ -152,30 +152,7 @@
                                 });
                             });
 
-                            // Form submission handler
-                            document.getElementById('submitButton').addEventListener('click', function(event) {
-                                event.preventDefault(); // Prevent default form submission
-
-                                // Validate the form
-                                if (validateForm()) {
-
-                                    
-                                    Swal.fire({
-                                        title: 'Are you sure?',
-                                        text: "Do you want submit?",
-                                        icon: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonColor: '#3085d6',
-                                        cancelButtonColor: '#d33',
-                                        confirmButtonText: 'Yes, submit it!',
-                                        cancelButtonText: 'No, cancel'
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            document.getElementById('IntellectualPropertyForm').submit(); // Submit the form
-                                        }
-                                    });
-                                }
-                            });
+                           
 
                             // Form validation function
                             function validateForm() {
