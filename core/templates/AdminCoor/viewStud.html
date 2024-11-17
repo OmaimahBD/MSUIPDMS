@@ -9,6 +9,7 @@
         color: white; /* Text color */
         opacity: 0.7;
         font-size: 13px;
+        
     }
 
     .card-title {
@@ -48,7 +49,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
             <div class="d-flex align-items-center">
                 <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle" style="color:maroon;"></i>
-                <h2 class="fs-2 m-0" style="font-family: Arial, sans-serif; font-size: 5px; font-weight: bold; color: maroon;">Users</h2>
+                <h2 class="fs-2 m-0" style="font-family: Poppins, sans-serif; font-size: 5px; font-weight: bold; color: maroon;">Users</h2>
             </div>
         </nav>
 
@@ -64,7 +65,7 @@
                                 <!-- Search Container -->
                                 <div class="search-container">
                                     <input type="text" id="search" class="search-input" placeholder="🔍︎  Search user..." onkeyup="searchTable()">
-                                    <a href="{% url 'AdminAddStudent' request.user.id %}" style="font-family: Poppins; font-weight: ; font-family: Arial, sans-serif; padding: 8px 8px; font-size: 15px; " class="btn btn-warning"> + ADD STUDENT</a>
+                                    <a href="{% url 'AdminAddStudent' request.user.id %}" style="font-family: Arial, sans-serif; padding: 8px 8px; font-size: 15px; " class="btn btn-warning"> + ADD STUDENT</a>
                                 </div>
 
                             <div class="table-responsive">
@@ -93,10 +94,10 @@
                                                     
                                                   
                                                         {% if not info.is_activated %}
-                                                            <a  href="{% url 'AdminActivateStudent' info.id %}" style="font-size: 14px;" class="btn btn-success">Activate</a>
+                                                            <a  href="{% url 'AdminActivateStudent' info.id %}" style="font-size: 14px;font-weight: lighter;" class="btn btn-success">Activate</a>
                                 
                                                         {% elif  info.is_activated %}
-                                                            <a  href="{% url 'AdminDeactivateStudent' info.id %}" style="font-size: 14px;" class="btn btn-warning">Deactivate</a>
+                                                            <a  href="{% url 'AdminDeactivateStudent' info.id %}" style="font-size: 14px; font-weight: lighter;" class="btn btn-warning">Deactivate</a>
                                                         {% endif %}
     
                                                  
