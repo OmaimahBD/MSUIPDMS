@@ -9,7 +9,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<img src="../static/admin/img/1.png" alt="About Image" class="about-image">
+<img src="../static/admin/img/aboutna.png" alt="About Image" class="about-image">
 <style>
     .org-list {
         padding: 30px;
@@ -84,14 +84,15 @@
     }
     /* About page specific styles */
     .about-image {
-        width: 100%;
-        height: 400px;
-        object-fit: fill; 
-        position: relative ; 
-        background-position: center;
-        display: flexbox;
-    
+        width: 100%; /* Ensure the image is responsive */
+        height: 400px; /* Maintain aspect ratio */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+        transition: transform 0.3s ease, filter 0.3s ease; /* Add transitions for smooth effects */
     }
+    .about-image:hover {
+    transform: scale(1.05); /* Slightly enlarge the image on hover */
+    filter: brightness(1.1); /* Make the image slightly brighter on hover */
+    }   
 
     .about-page {
         color: #333;

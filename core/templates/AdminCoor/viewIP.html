@@ -62,7 +62,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
             <div class="d-flex align-items-center">
                 <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle" style="color:maroon;"></i>
-                <h2 class="fs-2 m-0" style="font-family: Arial, sans-serif; font-size: 5px; font-weight: bold; color: maroon;">IP Assets</h2>
+                <h2 class="fs-2 m-0" style="font-family: Poppins, sans-serif; font-size: 5px; font-weight: bold; color: maroon;">IP Assets</h2>
             </div>
         </nav>
         <div class="container-fluid mt-0">
@@ -121,15 +121,7 @@
                                             </td>
 
                                             
-                                            <td> 
-                                                {% if ip.file %}
-                                                <a href="{{ MEDIA_URL }}ResearchFile/{{ ip.file }}" target="_blank">View </a>
-                                                {% else %}
-                                                    NA
-                                                {% endif %}
-                                            </td>
-
-                                            
+                                            <td><a href="{{ip.file.url}}"> {{ip.file.url}}</a></td>
                                             <td>Approved by {{ ip.approvedBy}}</td>
                                         </tr>
                                         {% endfor %}

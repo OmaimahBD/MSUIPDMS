@@ -1,8 +1,3 @@
-{% extends "master.html" %}
-
-{% block title %} Collge Page{% endblock %}
-
-{% block content %} 
 {% load static %}
 
 <!DOCTYPE html>
@@ -12,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% if page == 'login' %}MIPO: Log in{% else %}MIPO: Register{% endif %}</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/webp" sizes="180x180 " href="{% static 'admin/img/mipo.webp' %}">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <style>
@@ -30,21 +24,28 @@
         align-items: center;
         background-color: #f4f4f9;
     }
-    
-    /* Container Styles */
-    .login-container, .register-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        max-width: 900px;
-        padding: 20px;
-        backdrop-filter: blur(10px);
-        margin: 0 auto;
+
+    .register-container {
+        max-width: 800px;  /* Adjust based on your design */
+        width: 95%;
+        max-height: 100vh;  /* Maximum height to ensure it fits within the viewport */
+        overflow-y: auto;  /* Enable vertical scrolling if content overflows */
+        margin: auto;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 5px 5px 5px 5px rgba(128, 0, 0, 0.3); 
     }
-    
+    .login-container {
+        max-width: 850px;  /* Adjust based on your design */
+        width: 95%;
+        max-height: 100vh;  /* Maximum height to ensure it fits within the viewport */
+        overflow-y: auto;  /* Enable vertical scrolling if content overflows */
+        margin: auto;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 5px 5px 5px 5px rgba(128, 0, 0, 0.3); 
+    }
     .card {
-        display: flex;
         background-color: white;
         border-radius: 10px;
         box-shadow: 5px 5px 5px 5px rgba(128, 0, 0, 0.3); 
@@ -53,7 +54,6 @@
     }
     
     .card-body {
-        display: flex;
         flex-direction: row;
         width: 100%;
     }
@@ -69,15 +69,57 @@
         padding: 20px;
     }
     
-    @media (max-width: 768px) {
-        .card: {
-            margin-top: 20rem;
+    @media (max-width: 575px) {
+        .row {
+            flex-direction: column;
         }
+
         .col-md-6 {
-            
             width: 100%;
+         
         }
+
+        .login-description {
+            font-size: 2em;
+        }
+
+        .login-image {
+            order: 2; /* Move the image to the bottom */
+            margin-top: -60px;
+            border-radius: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .form-actions .btn {
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .signup-cancel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+       
     }
+
     
     /* Form section */
     .logo-container {
@@ -201,7 +243,6 @@
     
     /* Register page specific */
     .register-card {
-        display: flex;
         flex-direction: column; 
         background-color: white;
         border-radius: 10px;
@@ -271,14 +312,7 @@
         background-color: goldenrod;
     }
     
-    .register-card {
-        width: 100%;
-        padding: 20px;
-        background-color: white;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        margin: 0 auto;
-    }
+
     
     .register-description {
         text-align: center;
@@ -358,6 +392,40 @@
     .login-link:hover, .cancel-link:hover {
         text-decoration: underline;
     }
+    .toggle-password {
+        position: absolute;
+        right: 15px;
+        top: 68%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: gray;
+        font-size: 13px;
+        font-family: Century Gothic, sans-serif;
+        font-weight: bold;
+    }
+
+    .toggle-password:hover {
+        color: black;
+    }
+    .toggle-password1 {
+        position: absolute;
+        right: 15px;
+        top: 65%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: gray;
+        font-size: 13px;
+        font-family: Century Gothic, sans-serif;
+        font-weight: bold;
+    }
+
+    .toggle-password1:hover {
+        color: black;
+    }
     
 </style>
 
@@ -379,9 +447,10 @@
                             <label for="Username">Username:</label>
                             <input type="text" id="Username" name="email" class="form-control" placeholder="Enter username" required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="position: relative;">
                             <label for="Password">Password:</label>
                             <input type="password" id="Password" name="Password" class="form-control" placeholder="Enter password" required>
+                            <button class="toggle-password1" type="button" onclick="togglePassword('Password', this)">Show</button>
                         </div>
                         <div class="form-actions">
                             <a href="{% url 'password_reset' %}" class="forgot-password">Forgot password?</a>
@@ -401,28 +470,38 @@
         </div>
     </div>
 </div>
-
-<!-- Include jQuery -->
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<!-- Include Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Include SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-
-<script>
-    $(document).ready(function() {
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Include SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+        function togglePassword(fieldId, toggleButton) {
+            var passwordField = document.getElementById(fieldId);
+            var fieldType = passwordField.getAttribute('type');
         
-        const errorMessage = "{{ errormessage|escapejs }}";
-        if (errorMessage) {
-            Swal.fire({
-                title: 'Error!',
-                text: errorMessage,
-                icon: 'error',
-                confirmButtonText: 'Okay'
-            });
+            if (fieldType === 'password') {
+                passwordField.setAttribute('type', 'text');
+                toggleButton.textContent = 'Hide';
+            } else {
+                passwordField.setAttribute('type', 'password');
+                toggleButton.textContent = 'Show';
+            }
         }
-    });
-</script>
+        $(document).ready(function() {
+            
+            const errorMessage = "{{ errormessage|escapejs }}";
+            if (errorMessage) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Okay'
+                });
+            }
+        });
+    </script>
 
 {% else %}
 <div class="register-container">
@@ -433,16 +512,18 @@
                 {% csrf_token %}
                 <div class="form-fields">
                     {% for field in form %}
-                    <div class="form-group">
-                        <label>{{ field.label }}</label>
+                    <div class="form-group" style="position: relative;">
+                        <label>{{field.label}}</label>
                         {{ field }}
+                        {% if field.field.widget.input_type == "password" %}
+                            <button class="toggle-password" type="button" onclick="togglePassword('{{ field.id_for_label }}', this)">Show</button>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
                 <div class="register-actions">
                     <input type="submit" value="Register" id="submitButton" class="btn-register">
                 </div>
-                
             </form>
             <hr style="margin-top: 20px;">
             <div class="text-center login-cancel" style="margin-top: 10px;">
@@ -461,6 +542,20 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
 <script>
+    
+    function togglePassword(fieldId, toggleButton) {
+        var passwordField = document.getElementById(fieldId);
+        var fieldType = passwordField.getAttribute('type');
+    
+        if (fieldType === 'password') {
+            passwordField.setAttribute('type', 'text');
+            toggleButton.textContent = 'Hide';
+        } else {
+            passwordField.setAttribute('type', 'password');
+            toggleButton.textContent = 'Show';
+        }
+    }
+    
     $(document).ready(function() {
         
         const errorMessage = "{{ errormessage|escapejs }}";
@@ -476,10 +571,10 @@
         const successMessage = "{{ successmessage|escapejs }}";
         if (successMessage) {
             Swal.fire({
-                title: 'Success!',
+                title: 'Successly Registered!',
                 text: successMessage,
-                icon: 'Success',
-                confirmButtonText: 'Okay'
+                icon: 'success',
+                confirmButtonText: 'Okay!'
             });
         }
         // Dynamic department loading
@@ -571,7 +666,3 @@
 
 </body>
 </html>
-
-</body>
-</html>
-{% endblock %}

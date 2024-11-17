@@ -15,9 +15,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <style>
         :root {
             --main-bg-color: ;
@@ -145,27 +144,26 @@
         <!-- Sidebar -->
         <div class="bg-white" id="sidebar-wrapper">
             {% if user.is_superuser %}
-            <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
-                <i class="fas fa-user-secret me-2"></i>ADMIN PANEL <br>
-                <strong>Hi {{user.first_name}}</strong>
+            <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold border-bottom" style="font-family: Poppins, sans-serif;">
+                <strong>Hi, {{user.first_name}}.</strong>
             </div>
             {% elif user.is_coordinator %}
-            <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
-                <i class="fas fa-user-secret me-2"></i>COORDINATOR PANEL
+            <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold border-bottom"style="font-family: Poppins, sans-serif;">
+                <strong>Hi, {{user.first_name}}.</strong>
             </div>
             {% endif %}
 
             <div class="list-group list-group-flush my-3">
-                <a href="{% url 'AdminHome' %}" class="list-group-item list-group-item-action bg-transparent second-text active" style="color: maroon;">
+                <a href="{% url 'AdminHome' %}" class="list-group-item list-group-item-action bg-transparent second-text active" style="color: maroon; font-family: Poppins, sans-serif;">
                     <i class="fas fa-tachometer-alt me-2"></i>Dashboard
                 </a>
 
                 <!-- Data Visualization Section -->
                 <div class="profile-section">
-                    <button class="list-group-item list-group-item-action bg-transparent second-text fw-bold" type="button" id="dataVisButton">
+                    <button class="list-group-item list-group-item-action bg-transparent second-text fw-bold" style="font-family: Poppins, sans-serif;" type="button" id="dataVisButton">
                         <i class="fa fa-database"></i> Data Visualization ⮟
                     </button>
-                    <div class="profile-options" id="dataVisOptions">
+                    <div class="profile-options" id="dataVisOptions" style="font-family: Poppins, sans-serif;">
                         <a class="dropdown-item" href="{% url 'NumIPCollege' %}">• Number of IP's per College</a>
                         <a class="dropdown-item" href="{% url 'NumIPCollege1' %}">• Total of IP</a>
                         <a class="dropdown-item" href="{% url 'NumIp' %}">• Number of Intellectual Property</a>
@@ -173,33 +171,33 @@
                     </div>
                 </div>
 
-                <a href="{% url 'AdminStudList' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                <a href="{% url 'AdminStudList' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" style="font-family: Poppins, sans-serif;">
                     <i class="fa fa-users fa-fw"></i> Manage User
                 </a>
 
                 {% if user.is_superuser %}
-                <a href="{% url 'AdminList' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                <a href="{% url 'AdminList' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" style="font-family: Poppins, sans-serif;">
                     <i class="fa fa-eye fa-fw"></i> Manage Coordinator
                 </a>
                 {% endif %}
-                <a href="{% url 'AdminIPList' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                <a href="{% url 'AdminIPList' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" style="font-family: Poppins, sans-serif;">
                     <i class="fa fa-users fa-fw"></i> List of Intellectual Property
                 </a>
-                <a href="{% url 'AdminManageStudReq' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                <a href="{% url 'AdminManageStudReq' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" style="font-family: Poppins, sans-serif;">
                     <i class="fa fa-bullseye fa-fw"></i> Manage User Request
                 </a>
-                <a href="{% url 'AdminManageStudUpload' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                <a href="{% url 'AdminManageStudUpload' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" style="font-family: Poppins, sans-serif;">
                     <i class="fa fa-cloud me-2"></i> Manage User Upload
                 </a>
-                <a href="{% url 'AdminAddIntellectualProperty' request.user.id %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                <a href="{% url 'AdminAddIntellectualProperty' request.user.id %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" style="font-family: Poppins, sans-serif;">
                     <i class="fa fa-bell fa-fw"></i> Upload Intellectual Property
                 </a>
                 <a href="{% url 'Adminprofile' request.user.id %}"
-                class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                class="list-group-item list-group-item-action bg-transparent second-text fw-bold" style="font-family: Poppins, sans-serif;">
                 <i class="fa fa-users fa-fw"></i> My Profile
             </a>
 
-                <a href="{% url 'LogoutView' %}" class="list-group-item list-group-item-action bg-transparent text-danger fw-bold">
+                <a href="{% url 'LogoutView' %}" class="list-group-item list-group-item-action bg-transparent text-danger fw-bold" style="font-family: Poppins, sans-serif;">
                     <i class="fas fa-power-off me-2"></i>Logout
                 </a>
             </div>

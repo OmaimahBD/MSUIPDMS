@@ -43,7 +43,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
             <div class="d-flex align-items-center">
                 <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle" style="color:maroon;"></i>
-                <h2 class="fs-2 m-0" style="font-family: Arial, sans-serif; font-size: 5px; font-weight: bold; color: maroon;">Coordinators</h2>
+                <h2 class="fs-2 m-0" style="font-family: Poppins, sans-serif; font-size: 5px; font-weight: bold; color: maroon;">Coordinators</h2>
             </div>
         </nav>
     <div class="container-fluid mt-0">
@@ -80,10 +80,10 @@
                                             <td>{{ info.email }}</td>
                                             <td>
                                                 {% if not info.is_activated %}
-                                                <a  href="{% url 'AdminActivateStudent' info.id %}" style="font-size: 14px;" class="btn btn-success">Activate</a>
+                                                <a  href="{% url 'AdminActivateStudent' info.id %}" style="font-size: 14px; font-weight: lighter" class="btn btn-success">Activate</a>
                     
                                                 {% elif  info.is_activated %}
-                                                    <a  href="{% url 'AdminDeactivateStudent' info.id %}" style="font-size: 14px;" class="btn btn-warning">Deactivate</a>
+                                                    <a  href="{% url 'AdminDeactivateStudent' info.id %}" style="font-size: 14px; font-weight: lighter" class="btn btn-warning">Deactivate</a>
                                                 {% endif %}
                                         
                                             </td>
