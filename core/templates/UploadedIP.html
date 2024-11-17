@@ -101,7 +101,7 @@
                                                 </td>
                                                 <td>
                                                     {% if ip.file %}
-                                                        <a href="{{ ip.file.url }}" target="_blank">View File</a>
+                                                        <a href="{{ MEDIA_URL }}ResearchFile/{{ ip.file }}" target="_blank">View </a>
                                                     {% else %}
                                                         NA
                                                     {% endif %}

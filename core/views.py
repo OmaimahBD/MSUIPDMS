@@ -1,3 +1,4 @@
+
 from django.shortcuts import  render, redirect ,HttpResponse
 from .models import IntellectualProperty, College, Comment, CommenReply, Type, User,Student, Department,SubType
 from .forms import  IntellectualPropertyForm,  StudentForm, UserForm,UpdatePasswordForm
@@ -5,6 +6,9 @@ from django.db.models import Q # use this for dynamic searching
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from django.utils.dateparse import parse_date
 
 
 def home(request):
@@ -62,7 +66,7 @@ def UploadedIP(request):
  
     if not request.user.is_authenticated:
        
-        return redirect('login')  
+        return redirect('LoginView')  
 
 
     IP = IntellectualProperty.objects.filter(
@@ -74,6 +78,7 @@ def UploadedIP(request):
  
     context = {
         'IP': IP,
+        'MEDIA_URL': settings.MEDIA_URL,
     }
     return render(request, 'UploadedIP.html', context)
 
@@ -233,28 +238,34 @@ def intellectualProperty(request, pk):
     return render(request, 'IntellectualProperty.html', context)
 
 
-
-
-
-
+ 
 def get_user_by_name(last_name, first_name):
     users = User.objects.filter(last_name__iexact=last_name, first_name__iexact=first_name)
     if users.exists():
         return users.first()
     return None
- 
+
 def AddIntellectualProperty(request, pk):
-    iptitle=''
-    errormessage=''
+    iptitle = ''
+    errormessage = ''
     if request.method == 'POST':
         form = IntellectualPropertyForm(request.POST, request.FILES)
         if form.is_valid():
             IP = form.save(commit=False)
             user = User.objects.get(id=pk)
-            IP.college = user.college
-            IP.department = user.department
-            IP.host = request.user           
 
+            # Set college and department
+            college_name = user.college
+            try:
+                IP.college = College.objects.get(name=college_name)
+            except College.DoesNotExist:
+                form.add_error('college', f'College "{college_name}" does not exist.')
+                return render(request, 'AddIntellectualPropertyForm.html', {'form': form})
+
+            IP.department = user.department
+            IP.host = request.user
+
+            # Main author validation
             mainauthor_name = form.cleaned_data.get('mainauthor_username', '').strip()
             if mainauthor_name:
                 try:
@@ -263,93 +274,103 @@ def AddIntellectualProperty(request, pk):
                     if mainauthor:
                         IP.mainauthor = mainauthor
                     else:
-                        form.add_error('mainauthor_username', f'Main author with name "{mainauthor_name}" does not exist.')
-                        error_messages = [f" {', '.join(errors)}" for field, errors in form.errors.items()]
-                        errormessage = '' + ' '.join(error_messages)
-                        return render(request, 'AddIntellectualPropertyForm.html', {'form': form,'errormessage':errormessage})
+                        add_form_error(form, 'mainauthor_username', f'Main author "{mainauthor_name}" does not exist.')
+                        return render(request, 'AddIntellectualPropertyForm.html', {'form': form})
                 except ValueError:
-                    form.add_error('mainauthor_username', 'Main Author: Please enter the name in "lastname firstname" format.')
-                    error_messages = [f" {', '.join(errors)}" for field, errors in form.errors.items()]
-                    errormessage = '' + ' '.join(error_messages)
-                    return render(request, 'AddIntellectualPropertyForm.html', {'form': form,'errormessage':errormessage})
-            else:
-                IP.mainauthor = None
-        
-      
-           
+                    add_form_error(form, 'mainauthor_username', 'Enter name in "lastname firstname" format.')
+                    return render(request, 'AddIntellectualPropertyForm.html', {'form': form})
 
-            author_names = form.cleaned_data.get('author', '')
-            coauthor_names = [name.strip() for name in author_names.split(',') if name.strip()]
-
-            users = []
-            user_does_not_exist = False
+            # Co-author validation
+            coauthor_names = [name.strip() for name in form.cleaned_data.get('author', '').split(',') if name.strip()]
+            coauthors = []
             for name in coauthor_names:
                 try:
                     last_name, first_name = name.split(' ', 1)
                     user = get_user_by_name(last_name, first_name)
                     if user:
-                        users.append(user)
+                        coauthors.append(user)
                     else:
-                        form.add_error('author', f'Co-author with name "{name}" does not exist.')
-                        user_does_not_exist = True
-                        error_messages = [f" {', '.join(errors)}" for field, errors in form.errors.items()]
-                        errormessage = '' + ' '.join(error_messages)
-                        return render(request, 'AddIntellectualPropertyForm.html', {'form': form,'errormessage':errormessage})
+                        add_form_error(form, 'author', f'Co-author "{name}" does not exist.')
+                        return render(request, 'AddIntellectualPropertyForm.html', {'form': form})
                 except ValueError:
-                    form.add_error('author', f'Co-authors: Invalid name format "{name}". Use "lastname firstname, lastname firstname".')
-                    user_does_not_exist = True
-                    error_messages = [f" {', '.join(errors)}" for field, errors in form.errors.items()]
-                    errormessage = '' + ' '.join(error_messages)
-                    return render(request, 'AddIntellectualPropertyForm.html', {'form': form,'errormessage':errormessage})
+                    add_form_error(form, 'author', f'Invalid name format "{name}". Use "lastname firstname".')
+                    return render(request, 'AddIntellectualPropertyForm.html', {'form': form})
 
-            if user_does_not_exist:
-                users = [request.user]
-           
+            # Handle file upload
+            file = form.cleaned_data.get('file')
+            if file:
+                fs = FileSystemStorage(location=settings.MEDIA_ROOT / 'ResearchFile')
+                filename = fs.save(file.name, file)
+                IP.file = fs.url(filename)
 
+            # Store form data in session
             request.session['form_data'] = {
-                'tittle': form.cleaned_data.get('tittle'), 
-                'file': form.cleaned_data.get('file').name if form.cleaned_data.get('file') else None,
-                'mainauthor_id': mainauthor.id if mainauthor else None,
-                'coauthors_ids': [user.id for user in users],
+                'tittle': form.cleaned_data.get('tittle'),
+                'file': file.name if file else None,
+                'mainauthor_id': IP.mainauthor.id if IP.mainauthor else None,
+                'coauthors_ids': [user.id for user in coauthors],
+                'description': form.cleaned_data.get('description'),
+                'college': IP.college.name,
+                'department': IP.department.name,
+                'type_id': form.cleaned_data.get('type').id if form.cleaned_data.get('type') else None,
+                'subtype_id': form.cleaned_data.get('subtype').id if form.cleaned_data.get('subtype') else None,
+                'year': form.cleaned_data.get('year').strftime('%Y-%m-%d') if form.cleaned_data.get('year') else None,
             }
-    
             return redirect('preview')
         else:
-            errormessage = 'Intellectual Property with the same title exist' 
-            return render(request, 'AddIntellectualPropertyForm.html', {'form': form,'errormessage':errormessage})  
-           
+            errormessage = 'Form validation failed. Please correct errors and try again.'
     else:
-        form = IntellectualPropertyForm()  
-         
+        form = IntellectualPropertyForm()
 
-    context = {'form': form, 'errormessage':errormessage, 'iptitle':iptitle}
+    context = {'form': form, 'errormessage': errormessage, 'iptitle': iptitle}
     return render(request, 'AddIntellectualPropertyForm.html', context)
+
 
 def preview(request):
     form_data = request.session.get('form_data')
-     
-    mainauthor_id = form_data.get('mainauthor_id')
-    mainauthor = User.objects.get(id=mainauthor_id) if mainauthor_id else None
+    if not form_data:
+        messages.error(request, "No data to preview.")
+        return redirect('AddIntellectualProperty')
+
+    mainauthor = User.objects.get(id=form_data['mainauthor_id']) if form_data.get('mainauthor_id') else None
+    college_instance = College.objects.get(name=form_data['college'])
+    department_instance = Department.objects.get(name=form_data['department'])
+    type_instance = Type.objects.get(id=form_data['type_id']) if form_data.get('type_id') else None
+    subtype_instance = SubType.objects.get(id=form_data['subtype_id']) if form_data.get('subtype_id') else None
+    year = parse_date(form_data['year']) if form_data.get('year') else None
+
     if request.method == 'POST':
-        
         IPupload = IntellectualProperty.objects.create(
             host=request.user,
-            tittle=form_data.get('tittle'),
-            file=form_data.get('file'), 
+            tittle=form_data['tittle'],
             mainauthor=mainauthor,
+            description=form_data['description'],
+            college=college_instance,
+            department=department_instance,
+            type=type_instance,
+            subtype=subtype_instance,
+            year=year,
+            file=form_data['file'],
         )
-        
-       
-        coauthors_ids = form_data.get('coauthors_ids', [])
-        IPupload.author.set(coauthors_ids) 
-     
-        del request.session['form_data']  
-        return redirect('UploadedIP') 
-    
-    mainauthor_name = mainauthor.get_full_name() if mainauthor else "No main author"
-    coauthors = User.objects.filter(id__in=form_data.get('coauthors_ids', []))
+        IPupload.author.set(form_data['coauthors_ids'])
 
-    return render(request, 'preview.html', {'form_data': form_data, 'mainauthor_name':mainauthor_name, 'coauthors':coauthors})
+        del request.session['form_data']
+        messages.success(request, "Intellectual Property uploaded successfully.")
+        return redirect('UploadedIP')
+
+    coauthors = User.objects.filter(id__in=form_data['coauthors_ids'])
+    file_url = f"{settings.MEDIA_URL}ResearchFile/{form_data['file']}" if form_data.get('file') else None
+
+    return render(request, 'preview.html', {
+        'form_data': form_data,
+        'mainauthor_name': mainauthor.get_full_name() if mainauthor else "No main author",
+        'coauthors': coauthors,
+        'type_instance': type_instance,
+        'subtype_instance': subtype_instance,
+        'year': year,
+        'file_url': file_url,
+    })
+
 
     
 def load_department(request):

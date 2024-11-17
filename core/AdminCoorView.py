@@ -11,6 +11,7 @@ from django.utils import timezone
 import time
 from django.db.models import Count, Case, When
 from django.db.models import Q 
+from django.contrib.auth.decorators import login_required
 
 
 

@@ -54,16 +54,23 @@
       margin-top: 80px;
     }
   
-    .searchbar input[type="text"] {
-      flex-grow: 1;
-      height: 100%;
-      font-size: 16px;
-      border: none;
-      background: none;
-      outline: none;
-      padding: 0 10px;
-      color: #333;
-    }
+  .searchbar input[type="text"] {
+    height: 100%;
+    width: 100%;
+    font-size: 16px;
+    background: #F1F1F1;
+    padding-left: 10px;
+    border-color: transparent;
+    border-radius: 40px;
+    transition: border-color 0.3s;
+}
+
+.searchbar input[type="text"]:focus {
+    outline: none;
+    border-color: transparent;
+    box-shadow: none;
+}
+
   
     .searchbar button {
       border: none;
@@ -163,7 +170,7 @@
 
   <div class="searchbar mx-auto col-lg-20 col-md-10 col-sm-12">
     <form action="{% url 'room' %}" class="w-100 d-flex" style="height: 35px; ">
-      <input id="search" type="text" placeholder="Search..." name="q" class="form-control" />
+      <input id="search" type="text" placeholder="Search..." name="q" />
       <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
     </form>
   </div>

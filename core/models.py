@@ -88,15 +88,14 @@ class IntellectualProperty(models.Model):
     file =models.FileField(upload_to='ResearchFile/')
     doc_text_tokens = models.TextField(blank=True, default='')
     cover =models.ImageField(null=True,blank=True,upload_to='cover/', default="Abtract Cover.svg")
-    year=models.DateField(null=True)#datetimefield
+    year=models.DateField(null=True)
     author = models.ManyToManyField(User, related_name='authored_intellectual_property') 
     mainauthor= models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name='mainauthorfirstname_intellectual_property') 
     is_approved = models.BooleanField(default=False)
     is_pending= models.BooleanField(default=True)
     ipviews=models.IntegerField(default=0, null=True, blank=True)
 
- 
-   
+  
     class Meta:
         ordering = ['-updated','-created']
 

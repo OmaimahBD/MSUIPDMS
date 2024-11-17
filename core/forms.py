@@ -134,7 +134,11 @@ class IntellectualPropertyForm(forms.ModelForm):
             'file': forms.ClearableFileInput(attrs={'placeholder': 'Upload a file'}),
             'subtype': forms.Select(attrs={'placeholder': 'Select subtype'}),
             'cover': forms.ClearableFileInput(attrs={'placeholder': 'Upload a cover image'}),
-            'year': forms.TextInput(attrs={'placeholder': 'yyyy-mm-dd'}),
+            'year': forms.DateInput(attrs={
+                'type': 'date',
+                'placeholder': 'yyyy-mm-dd',
+                'class': 'form-control custom-date-input'  
+            }),
             'description': forms.Textarea(attrs={'placeholder': 'Enter a description of the intellectual property'}),
         }
         labels = {

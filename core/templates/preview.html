@@ -99,21 +99,47 @@ button[type="submit"]:hover {
                 <!-- /.card-header -->
                 <div class="card-body">
 
-                    <form method="POST" action="" enctype="multipart/form-data" id="IntellectualPropertyForm" >
-                        {% csrf_token %}
-                        <h3>Review your submission </h3>
-                        <p>Title: {{form_data.tittle}}</p>
-                        <p>Main Author: {{mainauthor_name}} </p>
-                        <p>Co Authors: 
+                
+                        <h2>Review Your Submission</h2>
+                        
+                        <h3>Title: {{ form_data.tittle }}</h3>
+                        
+                        <p><strong>Description:</strong> {{ form_data.description }}</p>
+                        
+                        <p><strong>Main Author:</strong> {{ mainauthor_name }}</p>
+                        
+                        <p><strong>College:</strong> {{ form_data.college }}</p>
+                        
+                        <p><strong>Department:</strong> {{ form_data.department }}</p>
+                        
+                        <p><strong>Year:</strong> {% if form_data.year %} {{ form_data.year }} {% else %} N/A {% endif %}</p>
+                        
+                        <p><strong>Type:</strong> {% if type_instance %} {{ type_instance.type }} {% else %} N/A {% endif %}</p>
+                        
+                        <p><strong>Subtype:</strong> {% if subtype_instance %} {{ subtype_instance.name }} {% else %} N/A {% endif %}</p>
+                        
+                        <p><strong>File:</strong>
+                            {% if file_url %}
+                                <a href="{{ file_url }}" target="_blank" rel="noopener">View File</a>
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                        
+                        <p><strong>Co-authors:</strong>
                             <ul>
-                            {% for coauthor in coauthors %}
-                                <li>{{ coauthor.get_full_name }}</li>
-                            {% endfor %}
-                        </ul></p>
-                        <p>File : {{form_data.file}}</p>
-
-                        <button type="submit" id="submitButton" class="btn btn-danger btn-block">confirm</button>
-                    </form>
+                                {% for coauthor in coauthors %}
+                                    <li>{{ coauthor.get_full_name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </p>
+                
+                        <form method="POST" action="" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <button type="submit" class="btn btn-success">Confirm and Save</button>
+                           
+                        </form>
 
                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
                     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
