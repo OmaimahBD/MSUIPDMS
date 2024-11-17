@@ -86,6 +86,8 @@
                                         <tr>
                                             <th>Cover</th>
                                             <th>Title</th>
+                                            <th>Type</th>
+                                            <th>Subtype</th>
                                             <th>Year</th>
                                             <th>College</th>
                                             <th>Main Author</th>
@@ -106,6 +108,8 @@
                                                     {% endif %}
                                                 </td>
                                                 <td>{{ ip.tittle }}</td>
+                                                <td>{{ ip.type.type }}</td> 
+                                                <td>{{ ip.subtype.name }}</td> 
                                                 <td>{{ ip.year }}</td>
                                                 <td>{{ ip.college }}</td>
                                                 <td>{{ ip.mainauthor.last_name }}, {{ ip.mainauthor.first_name }} </td>
