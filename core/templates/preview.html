@@ -96,7 +96,7 @@ button[type="submit"]:hover {
                 <div class="card-header"> 
                     <h3 class="card-title">Preview</h3>
                 </div>
-                <!-- /.card-header -->
+              
                 <div class="card-body">
 
                 
@@ -159,11 +159,11 @@ button[type="submit"]:hover {
 
 
 
-                            // Form submission handler
+                           
                             document.getElementById('submitButton').addEventListener('click', function(event) {
-                                event.preventDefault(); // Prevent default form submission
+                                event.preventDefault(); 
 
-                                // Validate the form
+                              
                                 if (validateForm()) {
 
                                     
@@ -184,7 +184,7 @@ button[type="submit"]:hover {
                                 }
                             });
 
-                            // Form validation function
+                            
                             function validateForm() {
                                 let isValid = true;
                                 const fields = document.querySelectorAll('#IntellectualPropertyForm input, #IntellectualPropertyForm select, #IntellectualPropertyForm textarea');

@@ -12,6 +12,12 @@ import time
 from django.db.models import Count, Case, When
 from django.db.models import Q 
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.utils import timezone
+import os
+import json
 
 
 
@@ -48,7 +54,7 @@ def home(request):
     top_ips = IntellectualProperty.objects.order_by('-ipviews')[:10]
     ip_titles = [ip.tittle for ip in top_ips]
     ip_views = [ip.ipviews for ip in top_ips]
-    ip_links = [f'/intellectual_property/{ip.pk}/' for ip in top_ips]  # Assuming you have a URL pattern for individual IPs
+    ip_links = [f'/intellectual_property/{ip.pk}/' for ip in top_ips]  
 
   
    
@@ -377,7 +383,7 @@ def ManageStudentUpload(request):
     
     
     
-    context={'IP': IP }
+    context={'IP': IP, 'MEDIA_URL': settings.MEDIA_URL,}
     return render(request,'AdminCoor/manageStudUpload.html',context)
 
 
@@ -428,7 +434,7 @@ def viewIP(request):
 
  
     context = {
-    'displayIPlist': displayIPlist, 
+    'displayIPlist': displayIPlist,  'MEDIA_URL': settings.MEDIA_URL,
    
 
    
@@ -436,34 +442,84 @@ def viewIP(request):
     return render(request,'AdminCoor/viewIP.html',context)
 
 
-def approveUpload(request,pk):
+
+
+def approveUpload(request, pk):
+  
+    IP = IntellectualProperty.objects.get(id=pk)
     
-    IP = IntellectualProperty.objects.get(id=pk) 
-    list_of_tokens = preprocess_doc_tokens(IP.file)
+  
+    file_relative_path = IP.file.name  
+    
+   
+    if not file_relative_path.startswith('ResearchFile/'):
+        file_relative_path = os.path.join('ResearchFile', file_relative_path)
+    
+    
+    pdf_file_path = os.path.join(settings.MEDIA_ROOT, file_relative_path)
+
+    print(f"File path: {pdf_file_path}")  
+    
+    try:
+       
+        list_of_tokens = preprocess_doc_tokens(pdf_file_path)
+    except FileNotFoundError:
+        print(f"File not found: {pdf_file_path}")  
+        return HttpResponse("File not found.", status=404)
+    
+   
     IP.doc_text_tokens = json.dumps(list_of_tokens)
     IP.is_approved = True
     IP.is_pending = False
     IP.approvedBy = request.user
     IP.approvedDate = timezone.now()
-    print(IP.approvedBy )
     IP.save()
+    
+   
     return redirect('AdminManageStudUpload')
+
+
 
 def checkPlagiarism(request, pk):
     IP = IntellectualProperty.objects.get(id=pk)
-    list_of_tokens = preprocess_doc_tokens(IP.file)
+
+    file_relative_path = IP.file.name
+
+    
+    if not file_relative_path.startswith('ResearchFile/'):
+        file_relative_path = os.path.join('ResearchFile', file_relative_path)
+
+    
+    pdf_file_path = os.path.join(settings.MEDIA_ROOT, file_relative_path)
+
+    print(f"File path: {pdf_file_path}")  
+    
+    try:
+        
+        list_of_tokens = preprocess_doc_tokens(pdf_file_path)
+    except FileNotFoundError:
+        print(f"File not found: {pdf_file_path}")  
+        return HttpResponse("File not found.", status=404)
+    
     IP.doc_text_tokens = json.dumps(list_of_tokens)
     IP.save()
+    
     highest_score, highest_score_target = calc_doc_similarity(IP)
     IP.save()
-    print(highest_score_target)
+
+   
+    highest_score_percentage = round(highest_score * 100, 2)
+
     source = ''
     if highest_score_target:
-        source = IntellectualProperty.objects.get(tittle=highest_score_target)  
+        source = IntellectualProperty.objects.get(tittle=highest_score_target)
     else:
         source = None
-    context = {'IP': IP,'highestscore' : highest_score * 100, 'source':source}
-    return render(request,'AdminCoor/score.html',context)
+
+    context = {'IP': IP, 'highestscore': highest_score_percentage, 'source': source}
+    return render(request, 'AdminCoor/score.html', context)
+
+
 
     
 def disapproveUpload(request,pk):

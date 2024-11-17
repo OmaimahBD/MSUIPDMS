@@ -254,7 +254,6 @@ def AddIntellectualProperty(request, pk):
             IP = form.save(commit=False)
             user = User.objects.get(id=pk)
 
-            # Set college and department
             college_name = user.college
             try:
                 IP.college = College.objects.get(name=college_name)
@@ -265,7 +264,7 @@ def AddIntellectualProperty(request, pk):
             IP.department = user.department
             IP.host = request.user
 
-            # Main author validation
+            
             mainauthor_name = form.cleaned_data.get('mainauthor_username', '').strip()
             if mainauthor_name:
                 try:
@@ -274,13 +273,13 @@ def AddIntellectualProperty(request, pk):
                     if mainauthor:
                         IP.mainauthor = mainauthor
                     else:
-                        add_form_error(form, 'mainauthor_username', f'Main author "{mainauthor_name}" does not exist.')
+                       
                         return render(request, 'AddIntellectualPropertyForm.html', {'form': form})
                 except ValueError:
-                    add_form_error(form, 'mainauthor_username', 'Enter name in "lastname firstname" format.')
+                   
                     return render(request, 'AddIntellectualPropertyForm.html', {'form': form})
 
-            # Co-author validation
+            
             coauthor_names = [name.strip() for name in form.cleaned_data.get('author', '').split(',') if name.strip()]
             coauthors = []
             for name in coauthor_names:
@@ -290,20 +289,20 @@ def AddIntellectualProperty(request, pk):
                     if user:
                         coauthors.append(user)
                     else:
-                        add_form_error(form, 'author', f'Co-author "{name}" does not exist.')
+                        
                         return render(request, 'AddIntellectualPropertyForm.html', {'form': form})
                 except ValueError:
-                    add_form_error(form, 'author', f'Invalid name format "{name}". Use "lastname firstname".')
+                   
                     return render(request, 'AddIntellectualPropertyForm.html', {'form': form})
 
-            # Handle file upload
+            
             file = form.cleaned_data.get('file')
             if file:
                 fs = FileSystemStorage(location=settings.MEDIA_ROOT / 'ResearchFile')
                 filename = fs.save(file.name, file)
                 IP.file = fs.url(filename)
 
-            # Store form data in session
+            
             request.session['form_data'] = {
                 'tittle': form.cleaned_data.get('tittle'),
                 'file': file.name if file else None,
@@ -416,7 +415,7 @@ def DeleteIntellectualProperty(request, pk):
     if request.method == 'POST':
         IP.delete()
         return redirect('UploadedIP')
-    # return redirect('home')
+    
     context={ 'obj': IP}
     return render(request,'delete.html',context)
 

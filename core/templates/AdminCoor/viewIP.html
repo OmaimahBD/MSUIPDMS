@@ -121,7 +121,15 @@
                                             </td>
 
                                             
-                                            <td><a href="{{ip.file.url}}"> {{ip.file.url}}</a></td>
+                                            <td> 
+                                                {% if ip.file %}
+                                                <a href="{{ MEDIA_URL }}ResearchFile/{{ ip.file }}" target="_blank">View </a>
+                                                {% else %}
+                                                    NA
+                                                {% endif %}
+                                            </td>
+
+                                            
                                             <td>Approved by {{ ip.approvedBy}}</td>
                                         </tr>
                                         {% endfor %}
