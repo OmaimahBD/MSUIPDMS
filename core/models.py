@@ -74,7 +74,7 @@ class SubType(models.Model):
     
 class IntellectualProperty(models.Model):
     host = models.ForeignKey(User, on_delete=models.CASCADE, related_name='hosted_intellectual_property')
-    approvedBy = models.ForeignKey(User, on_delete=models.CASCADE,related_name='approved_intellectual_property', null=True, blank=True)
+    approvedBy = models.CharField(max_length=100, blank=True, null=True) 
     college=models.ForeignKey(College,on_delete=models.SET_NULL, null=True)
     department=models.ForeignKey(Department,on_delete=models.SET_NULL, null=True)
     type=models.ForeignKey(Type,on_delete=models.SET_NULL, null=True)

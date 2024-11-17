@@ -146,7 +146,8 @@
         <div class="bg-white" id="sidebar-wrapper">
             {% if user.is_superuser %}
             <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
-                <i class="fas fa-user-secret me-2"></i>ADMIN PANEL
+                <i class="fas fa-user-secret me-2"></i>ADMIN PANEL <br>
+                <strong>Hi {{user.first_name}}</strong>
             </div>
             {% elif user.is_coordinator %}
             <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">

@@ -36,7 +36,7 @@ def home(request):
         copyrights=Count(Case(When(type__type='Copyright', then=1)))
     )
     
-    # Get the total counts directly from the data dictionary
+ 
     total_patents = data['patents']
     total_trademarks = data['trademarks']
     total_copyrights = data['copyrights']
@@ -471,7 +471,7 @@ def approveUpload(request, pk):
     IP.doc_text_tokens = json.dumps(list_of_tokens)
     IP.is_approved = True
     IP.is_pending = False
-    IP.approvedBy = request.user
+    IP.approvedBy = request.user.first_name
     IP.approvedDate = timezone.now()
     IP.save()
     
