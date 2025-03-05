@@ -1,6 +1,6 @@
 {% extends "master.html" %}
 
-{% block title %}Upload{% endblock %}
+{% block title %}MIPO: Uploaded IP's{% endblock %}
 
 {% block content %}
 <style>
@@ -32,7 +32,6 @@
         padding: 10px;
         border-radius: 5px;
         text-transform: uppercase; /* Make text uppercase */
-        
     }
     .status-approved {
         background-color: rgba(0, 128, 0, 0.7); /* Darker green for better contrast */
@@ -48,8 +47,42 @@
         background-color: rgba(255, 0, 0, 0.7); /* Darker red for better contrast */
         color: #fff; /* White text for readability */
         opacity: 0.7;
+    }
+    .search-bar {
+        width: 70%; /* Adjusted width of the search bar container */
+        display: flex;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+    .search-input {
+        width: 70%; /* Occupies 85% of the parent (flex container) */
+        padding: 10px;
+        border: 2px solid rgba(128, 0, 0, 0.7);
+        border-radius: 4px 0 0 4px;
+        font-size: 16px;
+        justify-content: center;
         
     }
+    
+    .search-button {
+        width: 4%; /* Occupies 15% of the parent (flex container) */
+        background-color: rgba(128, 0, 0, 0.9);
+        color: white;
+        padding: 10px;
+        border: none;   
+        border-radius: 0 4px 4px 0;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .search-button:hover {
+        background-color: goldenrod;
+    }
+
 </style>
 
 <center>
@@ -64,8 +97,17 @@
                         </div>
                     </div>
                     <!-- /.card-header -->
+                    
                     <center>
                     <div class="card-body">
+                        <!-- Search Bar -->
+                        <div class="search-bar">
+                            <input type="text" id="searchInput" class="search-input" placeholder="Search by Title, College, or Author...">
+                            <button class="search-button" onclick="searchTable()">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <!-- /.search-bar -->
+
                         <div class="table-responsive">
                             <table id="example2" class="table table-bordered table-hover">
                                 <thead class="thead">
@@ -77,52 +119,65 @@
                                         <th>Co-Authors</th>
                                         <th>View Full Copy</th>
                                         <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="ipTable">
                                     {% for ip in IP %}
-                                            <tr>
-                                                <td>
-                                                    {% if ip.cover %}
-                                                        <img src="{{ ip.cover.url }}" class="cover-image" alt="Cover Image" style="width: 40px; height: auto;" />
-                                                    {% else %}
-                                                        NA
-                                                    {% endif %}
-                                                </td>
-                                                <td>{{ ip.tittle }}</td>
-                                                <td>{{ ip.college }}</td>
-                                                <td>{{ ip.mainauthor.last_name }}, {{ ip.mainauthor.first_name }} </td>
-                                                <td> 
-                                                    {% for author in ip.author.all %}
-                                                        {{ author.last_name }}, {{ author.first_name }}{% if not forloop.last %}, {% endif %}
-                                                    {% empty %}
-                                                        NA
-                                                    {% endfor %}
-                                                </td>
-                                                <td>
-                                                    {% if ip.file %}
-                                                        <a href="{{ MEDIA_URL }}ResearchFile/{{ ip.file }}" target="_blank">View </a>
-                                                    {% else %}
-                                                        NA
-                                                    {% endif %}
-                                                </td>
-                                                <td>
-                                                    {% if ip.is_pending %}
-                                                        <div class="status-box status-pending">Pending</div>
-                                                        <a  href="{% url 'DeleteIntellectualProperty' ip.id %}" class="btn btn-success">cancel</a>
-                                                    {% elif ip.is_approved %}
-                                                        <div class="status-box status-approved">Approved {{ ip.approvedDate }}</div>
-                                                    {% else %}
-                                                        <div class="status-box status-rejected">Rejected {{ ip.disapprovedDate }}</div>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                    
+                                        <tr>
+                                            <td>
+                                                {% if ip.cover %}
+                                                    <img src="{{ ip.cover.url }}" class="cover-image" alt="Cover Image" style="width: 40px; height: 60px;" />
+                                                {% else %}
+                                                    NA
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ ip.tittle }}</td>
+                                            <td>{{ ip.college }}</td>
+                                            <td>{{ ip.mainauthor.last_name }}, {{ ip.mainauthor.first_name }} </td>
+                                            <td> 
+                                                {% for author in ip.author.all %}
+                                                    {{ author.last_name }}, {{ author.first_name }}{% if not forloop.last %}, {% endif %}
+                                                {% empty %}
+                                                    NA
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                {% if ip.file %}
+                                                    <a href="{{ MEDIA_URL }}ResearchFile/{{ ip.file }}" target="_blank">View </a>
+                                                {% else %}
+                                                    NA
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if ip.is_pending %}
+                                                    <div class="status-box status-pending">Pending</div>
+                                                {% elif ip.is_approved %}
+                                                    <div class="status-box status-approved">Approved {{ ip.approvedDate }}</div>
+                                                {% else %}
+                                                    <div class="status-box status-rejected">Rejected {{ ip.disapprovedDate }}</div>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if ip.is_pending %}
+                                                    <button type="button" style="width: 100%; font-weight: bold; align-items: center; height: 2.6rem;" 
+                                                            class="btn btn-danger" 
+                                                            onclick= "confirmCancellation('{{ ip.id }}', '{{ ip.tittle }}')">CANCEL</button>
+                                            
+                                                    <form id="deleteForm{{ ip.id }}" method="post" action="{% url 'DeleteIntellectualProperty' ip.id %}" style="display: none;">
+                                                        {% csrf_token %}
+                                                    </form>
+                                                {% else %}
+                                                    <p>You cannot cancel this.</p>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                    
                     <!-- /.card-body -->
                     </center>
                 </div>
@@ -130,4 +185,50 @@
             </div>
         </div>
     </div>
+</center>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmCancellation(ipId, title) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `Are you sure you want to cancel the intellectual property titled "${title}"? This action cannot be undone.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, cancel it!',
+            cancelButtonText: 'No, keep it'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById(`deleteForm${ipId}`).submit();
+            }
+        });
+    }
+
+    function searchTable() {
+        let input = document.getElementById("searchInput");
+        let filter = input.value.toLowerCase();
+        let table = document.getElementById("example2");
+        let tr = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < tr.length; i++) {
+            let tds = tr[i].getElementsByTagName("td");
+            let found = false;
+
+            for (let j = 1; j < tds.length; j++) {
+                let td = tds[j];
+                if (td) {
+                    if (td.innerText.toLowerCase().indexOf(filter) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            tr[i].style.display = found ? "" : "none";
+        }
+    }
+</script>
+
 {% endblock %}

@@ -137,7 +137,7 @@ class IntellectualPropertyForm(forms.ModelForm):
             'year': forms.DateInput(attrs={
                 'type': 'date',
                 'placeholder': 'yyyy-mm-dd',
-                'class': 'form-control custom-date-input'  
+                'class': 'form custom-date-input'
             }),
             'description': forms.Textarea(attrs={'placeholder': 'Enter a description of the intellectual property'}),
         }

@@ -148,13 +148,12 @@ def LoginView(request):
         elif user is not None and user.is_student and user.is_activated:
             login(request, user)
             return redirect('home')
-        
-        
+            
         else:
             errormessage = 'Username or password does not exist'
             return render(request,'login_reg.html',{'page':page,'errormessage': errormessage})
           
-     
+
    print(errormessage)
 
    context={'page': page, 'errormessage': errormessage}

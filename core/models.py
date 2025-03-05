@@ -15,9 +15,6 @@ class User (AbstractUser):
     id_number = models.CharField(max_length=50, null=True)
     college=models.ForeignKey('College',on_delete=models.SET_NULL, null=True)
     department=models.ForeignKey('Department',on_delete=models.SET_NULL, null=True)
-   
-   
-
     
    
 class Student(models.Model):
@@ -38,8 +35,6 @@ class Coordinator(models.Model):
 
     def __str__(self):
         return self.user.username
-    
-    
     
 
 

@@ -1,6 +1,6 @@
   {% extends "master.html" %}
 
-  {% block title %} upload{% endblock %}
+  {% block title %} MIPO: Upload IP{% endblock %}
 
   {% block content %} 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -49,13 +49,25 @@
     }
 
     input[type="text"], input[type="email"], input[type="password"], input[type="file"], select, textarea {
-      font-size: 0.9em;
+      font-size: 14.5px;
       color: #333;
       width: 94.5%;
       display: block;
       border: none;
       padding: 0.5em;
       border: solid 1px rgba(0, 0, 0, 0.2);
+      margin-bottom: 1em;
+      background: #fff;
+      font-family: 'Roboto', sans-serif;
+    }
+    .form {
+      font-size: 14.5px;
+      color: #333;
+      width: 94.5%;
+      display: block;
+      border: none;
+      padding: 0.5em;
+      border: solid 1.5px rgba(0, 0, 0, 0.2);
       margin-bottom: 1em;
       background: #fff;
       font-family: 'Roboto', sans-serif;
@@ -195,7 +207,6 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 var el = document.getElementById("wrapper");
 var toggleButton = document.getElementById("menu-toggle");

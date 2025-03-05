@@ -99,117 +99,152 @@
     color: white;
   }
 
-  .comment-wrapper-container {
+  /* Comment and Reply Styles */
+.comment-wrapper-container {
     width: 100%;
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
-  }
+}
 
-  .comment-wrapper {
-    max-height: 600px;
+.comment-wrapper {
+    max-height: 550px;
     overflow-y: auto;
     padding-right: 10px; 
-  }
+}
 
-  .comment-wrapper h4 {
+.comment-wrapper h4 {
     color: maroon;
-    font-size: 24px;
+    font-size: 30px;
     margin-bottom: 15px;
     position: sticky;
     top: 0;
     background-color: #fff;
     z-index: 1;
     font-weight: bold;
-  }
+    padding: 10px 0;
+}
 
-  .comment {
+.comment {
     display: flex;
-    align-items: flex-start;
-    margin-bottom: 15px;
-  }
+    flex-direction: column;
+    margin-bottom: 10px;
+    margin-left: 4rem;
 
-  .comment img {
+}
+
+.comment img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    margin-right: 15px;
-  }
+    margin-right: 10px;
+}
 
-  .comment-content {
-    flex: 1;
-    background-color: #f1f1f1;
-    padding: 10px 15px;
+.comment-content {
+    background-color: #f9f9f9;
+    padding: 15px;
     border-radius: 8px;
     position: relative;
-  }
+    margin-bottom: 10px;
+    border-left: 3px solid maroon;
+}
 
-  .comment-content small {
+.comment-content small {
     font-size: 12px;
     color: #555;
     display: block;
     margin-bottom: 5px;
-  }
+}
 
-  .comment-content p {
+.comment-content p {
     font-size: 14px;
     color: black;
-    margin-top: 5px;
+    margin: 0;
     text-align: justify;
-  }
+}
+.comment-content a {
+  font-size: 13px;
+  color: blue;
+  text-decoration: none;
+}
 
-  .comment-content .comment-actions {
+.comment-content .comment-actions {
     display: flex;
     justify-content: space-between;
     margin-top: 5px;
-  }
+}
 
-  .comment-actions a {
-    font-size: 13px;
-    color: maroon;
-    cursor: pointer;
-    transition: color 0.3s;
-  }
-
-  .comment-actions a:hover {
-    color: goldenrod;
-  }
-
-  .reply {
-    margin-left: 65px;
+.reply {
+    margin-left: 60px;
     margin-top: 10px;
-    display: flex;
-    align-items: flex-start;
-  }
+}
 
-  .reply img {
+.reply img {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
     margin-right: 10px;
-  }
+}
 
-  .reply .comment-content {
+.reply .comment-content {
     background-color: #e9ecef;
-  }
+    border-left: 3px solid goldenrod;
+}
 
-  .comment-form {
+.reply-form {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 2px solid maroon; /* Add maroon border */
+}
+
+.reply-form input[type="text"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-bottom: 2px solid maroon; /* Maroon underline */
+}
+
+
+.comment-form, .reply-form {
     width: 100%;
     max-width: 600px;
     margin: 20px auto;
     padding: 10px;
     border-radius: 8px;
-  }
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
-  .comment-form input[type="text"] {
+.comment-form input[type="text"] {
     width: calc(100% - 20px);
     padding: 10px;
     font-size: 16px;
-    border: 3px solid maroon;
+    border: 2px solid maroon;
     border-radius: 4px;
-  }
+}
+
+.comment-form button {
+    background-color: maroon;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.comment-form button:hover {
+    background-color: #8b0000;
+}
 
   .modal {
     display: none;
@@ -240,6 +275,7 @@
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
+    margin-left: 25rem;
   }
 
   .close:hover,
@@ -267,15 +303,6 @@
     background-color: #8b0000;
   }
 
-  .reply-form {
-    display: none;
-    margin-top: 10px;
-    margin-left: 65px;
-  }
-
-  .reply-form input[type="text"] {
-    width: calc(100% - 100px);
-  }
 
   /* Responsive Styles */
   @media (max-width: 1200px) {
@@ -380,11 +407,14 @@
 <div class="container">
   <div class="roomcontent">
     <div>
+      <div class="back-button">
+        <a href="{% url 'room' %}" ><i class="fas fa-arrow-left"></i> Back </a>
+    </div>
       <span>@{{ IP.host }} </span>
       <img src="{{ IP.cover.url }}" class="cover-image" alt="IP Cover" />
     </div>
     <div>
-      <span1>{{ IP.created|timesince }} ago</span1>
+      <span1> {{ IP.created|timesince }} ago</span1>
       <h1>{{ IP.tittle }}</h1>
       <p>{{ IP.description }}</p>
       
@@ -393,19 +423,20 @@
         {%empty%}
            NA
          {% endfor %}
+        </small><br>
         
       <small>Intellectual Property Type: {{ IP.type.type }}</small><br>
       <small>Year Published: {{ IP.year }}</small><br>
       {%if request.user.is_authenticated%}
-         <a href="{{ IP.file.url }}"  class="btn btn-outline-danger">View</a><br>
+         <a href="{{ IP.file.url }}"  class="btn btn-outline-danger">Read more...</a><br>
       {% else %}
-         <a href="{{ IP.file.url }}#toolbar=0"  class="btn btn-outline-danger">View</a><br>
+         <a href="{{ IP.file.url }}#toolbar=0"  class="btn btn-outline-danger">Read more...</a><br>
       {% endif %}
       
     </div>
   </div>
 
-  
+  <small>{{ IP.topic.name }}</small>
 
   <hr>
 
@@ -419,9 +450,9 @@
             <img src="{{ comment.user.profile.url }}" alt="User Avatar">
             <div class="comment-content">
               <small>
-                @{{ comment.user.username }} {{ comment.created|timesince }} ago 
+                @ {{ comment.user.username }} • {{ comment.created|timesince }} ago •
                 {% if comment.user == request.user %}
-                <a href="#" onclick="openModal('deleteCommentModal{{ comment.id }}')">Delete</a>
+                <a href="#" onclick="openModal('deleteCommentModal{{ comment.id }}')"> Delete</a>
                 {% endif %}
               </small>
               <p>{{ comment.content }}</p>
@@ -436,7 +467,7 @@
                     <div class="comment">
                       <img src="{{ reply.user.profile.url }}" alt="User Avatar">
                       <div class="comment-content">
-                        <small>@{{ reply.user.username }} {{ reply.created|timesince }} ago
+                        <small>@{{ reply.user.username }} • {{ reply.created|timesince }} ago •
                           {% if reply.user == request.user %}
                           <a href="#" onclick="openModal('deleteReplyModal{{ reply.id }}')">Delete</a>
                           {% endif %}
@@ -449,11 +480,10 @@
                     <p>No replies yet.</p>
                   {% endfor %}
                 </div>
-                <form method="POST" action="{% url 'IntellectualProperty' IP.id %}">
+                <form method="POST" action="{% url 'IntellectualProperty' IP.id %}" class="reply-form">
                   {% csrf_token %}
                   <input type="hidden" name="comment_id" value="{{ comment.id }}" />
-                  <input type="text" name="reply_content" placeholder="Write your reply here..." required />
-                  <button type="submit" class="btn btn-outline-primary">Submit</button>
+                  <input type="text" name="reply_content" placeholder=" ╰┈➤     Write your reply here..." required />
                 </form>
               </div>
             </div>
@@ -463,13 +493,10 @@
           {% endfor %}
         </div>
       </div>
-
-
         <div class="comment-form">
           <form method="POST" action="{% url 'IntellectualProperty' IP.id %}">
             {% csrf_token %}
-            <input type="text" name="content" placeholder="Write your message here..." required />
-            <button type="submit" class="btn btn-outline-primary">Submit</button>
+            <input type="text" name="content" placeholder=" ╰┈➤    Write your message here..." required />
           </form>
         </div>
 

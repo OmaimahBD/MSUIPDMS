@@ -1,4 +1,5 @@
 {% load static %}
+{% load tz %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -145,11 +146,13 @@
         <div class="bg-white" id="sidebar-wrapper">
             {% if user.is_superuser %}
             <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold border-bottom" style="font-family: Poppins, sans-serif;">
-                <strong>Hi, {{user.first_name}}.</strong>
+                <strong>Hi, {{user.first_name}}.</strong> <br>
+                <span style="font-size: 15px;">{% now "m/d/Y" %}</span> 
             </div>
             {% elif user.is_coordinator %}
             <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold border-bottom"style="font-family: Poppins, sans-serif;">
-                <strong>Hi, {{user.first_name}}.</strong>
+                <strong>Hi, {{user.first_name}}.</strong> <br>
+                <span style="font-size: 15px;">{% now "m/d/Y" %}</span> 
             </div>
             {% endif %}
 

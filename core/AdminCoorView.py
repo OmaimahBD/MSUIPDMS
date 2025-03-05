@@ -16,6 +16,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils import timezone
+from datetime import datetime
 import os
 import json
 
@@ -82,6 +83,57 @@ def AdminProfile(request, pk):
     context = {'user': user}
     return render(request, 'AdminCoor/profile.html', context)
 
+def viewIP(request):
+    current_year = datetime.now().year
+
+    query = request.GET.get('q', '')  
+    from_year_str = request.GET.get('from_year', None)
+    to_year_str = request.GET.get('to_year', None)
+
+   
+    from_year = None
+    to_year = None
+    if from_year_str:
+        try:
+            from_year = datetime.strptime(from_year_str, "%Y-%m-%d").date()
+        except ValueError:
+            from_year = None
+
+    if to_year_str:
+        try:
+            to_year = datetime.strptime(to_year_str, "%Y-%m-%d").date()
+        except ValueError:
+            to_year = None
+
+
+    IP = IntellectualProperty.objects.filter(is_approved=True)
+
+  
+    if from_year and to_year:
+        IP = IP.filter(year__gte=from_year, year__lte=to_year)
+    elif from_year:
+        IP = IP.filter(year__gte=from_year)
+    elif to_year:
+        IP = IP.filter(year__lte=to_year)
+
+    
+    if query:
+        IP = IP.filter(Q(type__type__icontains=query))
+
+  
+    seen_titles = set()
+    displayIPlist = []
+    for ip in IP:
+        if ip.tittle not in seen_titles:
+            displayIPlist.append(ip)
+            seen_titles.add(ip.tittle)
+
+    context = {
+        'displayIPlist': displayIPlist,
+        'MEDIA_URL': settings.MEDIA_URL,
+        'current_year': current_year,
+    }
+    return render(request, 'AdminCoor/viewIP.html', context)
 
 def AdminUpdateUser(request):
     user = request.user
@@ -372,7 +424,7 @@ def deactivateStudent(request,pk):
         user.is_activated = False
         user.save()
         return redirect('AdminStudList')
-
+    
 def ManageStudentUpload(request):
    
     if request.user.is_coordinator:
@@ -385,62 +437,6 @@ def ManageStudentUpload(request):
     
     context={'IP': IP, 'MEDIA_URL': settings.MEDIA_URL,}
     return render(request,'AdminCoor/manageStudUpload.html',context)
-
-
-def viewIP(request):
-    
-    
-    query = request.GET.get('q', '')  
-    search_performed = False
-
-
-  
-
-    if query:
-        
-        filtered_IP = IntellectualProperty.objects.filter(
-            Q(type__type__icontains=query), is_approved = True
-          
-          
-        )
-
-        filtered_IP_list = list(filtered_IP)
-
-        seen_titles = set()
-        unique_IPs = []
-        for ip in filtered_IP_list:
-            if ip.tittle not in seen_titles:
-                unique_IPs.append(ip)
-                seen_titles.add(ip.tittle)
-
-        approvedIP = [ip for ip in unique_IPs if ip.is_approved]
-        search_performed = True
-    
-   
-    IP = IntellectualProperty.objects.all()
-    ListofIP = [ L for L in IP if L.is_approved==True]
-
-
-    displayIPlist=[]
-
-    if search_performed:
-       for ip in approvedIP:
-           displayIPlist.append(ip)
-    elif not search_performed:
-        for ip in ListofIP:
-           displayIPlist.append(ip)
-
-
-
- 
-    context = {
-    'displayIPlist': displayIPlist,  'MEDIA_URL': settings.MEDIA_URL,
-   
-
-   
-    }
-    return render(request,'AdminCoor/viewIP.html',context)
-
 
 
 
